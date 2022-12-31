@@ -2,6 +2,11 @@ package code.inspector.demo.web;
 
 import code.inspector.demo.model.Obj;
 import code.inspector.demo.service.RCEService;
+import org.springframework.expression.EvaluationContext;
+import org.springframework.expression.Expression;
+import org.springframework.expression.ExpressionParser;
+import org.springframework.expression.spel.standard.SpelExpressionParser;
+import org.springframework.expression.spel.support.StandardEvaluationContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -15,6 +20,18 @@ public class RCEController {
         this.rceService = rceService;
     }
 
+    @RequestMapping(path = "/")
+    public String index(String input) {
+        ExpressionParser parser = new SpelExpressionParser();
+        EvaluationContext evaluationContext = null;
+        Expression expr = null;
+        if (input.contains("test")) {
+            evaluationContext = new StandardEvaluationContext();
+            expr = parser.parseExpression(input);
+        }
+        expr.getValue(evaluationContext);
+        return "ok";
+    }
 
     @RequestMapping("/rce1")
     public String rce1(String data) {

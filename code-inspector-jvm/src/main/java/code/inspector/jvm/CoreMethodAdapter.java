@@ -17,7 +17,8 @@ public class CoreMethodAdapter<T> extends MethodVisitor {
     private final int access;
     private final String desc;
 
-    private final Map<Label, GotoState<T>> gotoStates = new HashMap<>();
+    private SavedVariableState<T> savedVariableState = new SavedVariableState<T>();
+    private Map<Label, SavedVariableState<T>> gotoStates = new HashMap<Label, SavedVariableState<T>>();
     private final Set<Label> exceptionHandlerLabels = new HashSet<>();
 
     protected OperandStack<T> operandStack;
@@ -39,58 +40,13 @@ public class CoreMethodAdapter<T> extends MethodVisitor {
         }
     }
 
-    private void mergeGotoState(Label label) {
+    private void mergeGotoState(Label label, SavedVariableState savedVariableState) {
         if (gotoStates.containsKey(label)) {
-            GotoState<T> state = gotoStates.get(label);
-            // old -> label
-            LocalVariables<T> oldLocalVariables = state.getLocalVariables();
-            OperandStack<T> oldOperandStack = state.getOperandStack();
-            // new -> null
-            LocalVariables<T> newLocalVariables = new LocalVariables<>();
-            OperandStack<T> newOperandStack = new OperandStack<>();
-            // init new
-            for (Set<T> original : oldLocalVariables.getList()) {
-                newLocalVariables.add(new HashSet<>(original));
-            }
-            for (Set<T> original : oldOperandStack.getList()) {
-                newOperandStack.add(new HashSet<>(original));
-            }
-            // add current state
-            for (int i = 0; i < newLocalVariables.size(); i++) {
-                while (i >= oldLocalVariables.size()) {
-                    oldLocalVariables.add(new HashSet<>());
-                }
-                newLocalVariables.get(i).addAll(oldLocalVariables.get(i));
-            }
-            for (int i = 0; i < newOperandStack.size(); i++) {
-                while (i >= oldOperandStack.size()) {
-                    oldOperandStack.add(new HashSet<>());
-                }
-                oldOperandStack.get(i).addAll(oldOperandStack.get(i));
-            }
-            // set new state
-            GotoState<T> newGotoState = new GotoState<>();
-            newGotoState.setOperandStack(newOperandStack);
-            newGotoState.setLocalVariables(newLocalVariables);
-            gotoStates.put(label, newGotoState);
+            SavedVariableState combinedState = new SavedVariableState(gotoStates.get(label));
+            combinedState.combine(savedVariableState);
+            gotoStates.put(label, combinedState);
         } else {
-            LocalVariables<T> oldLocalVariables = localVariables;
-            OperandStack<T> oldOperandStack = operandStack;
-            // new -> null
-            LocalVariables<T> newLocalVariables = new LocalVariables<>();
-            OperandStack<T> newOperandStack = new OperandStack<>();
-            // init new
-            for (Set<T> original : oldLocalVariables.getList()) {
-                newLocalVariables.add(new HashSet<>(original));
-            }
-            for (Set<T> original : oldOperandStack.getList()) {
-                newOperandStack.add(new HashSet<>(original));
-            }
-            // set new state
-            GotoState<T> newGotoState = new GotoState<>();
-            newGotoState.setOperandStack(newOperandStack);
-            newGotoState.setLocalVariables(newLocalVariables);
-            gotoStates.put(label, newGotoState);
+            gotoStates.put(label, new SavedVariableState(savedVariableState));
         }
     }
 
@@ -649,7 +605,7 @@ public class CoreMethodAdapter<T> extends MethodVisitor {
             default:
                 throw new IllegalStateException("unsupported opcode: " + opcode);
         }
-        mergeGotoState(label);
+        mergeGotoState(label, savedVariableState);
         super.visitJumpInsn(opcode, label);
         sanityCheck();
     }
@@ -657,22 +613,7 @@ public class CoreMethodAdapter<T> extends MethodVisitor {
     @Override
     public void visitLabel(Label label) {
         if (gotoStates.containsKey(label)) {
-            GotoState<T> state = gotoStates.get(label);
-            // old -> label
-            LocalVariables<T> oldLocalVariables = state.getLocalVariables();
-            OperandStack<T> oldOperandStack = state.getOperandStack();
-            // new -> null
-            LocalVariables<T> newLocalVariables = new LocalVariables<>();
-            OperandStack<T> newOperandStack = new OperandStack<>();
-            // init new
-            for (Set<T> original : oldLocalVariables.getList()) {
-                newLocalVariables.add(new HashSet<>(original));
-            }
-            for (Set<T> original : oldOperandStack.getList()) {
-                newOperandStack.add(new HashSet<>(original));
-            }
-            this.operandStack = newOperandStack;
-            this.localVariables = newLocalVariables;
+            savedVariableState = new SavedVariableState(gotoStates.get(label));
         }
         if (exceptionHandlerLabels.contains(label)) {
             operandStack.push(new HashSet<>());
@@ -702,9 +643,9 @@ public class CoreMethodAdapter<T> extends MethodVisitor {
     @Override
     public void visitTableSwitchInsn(int min, int max, Label dflt, Label... labels) {
         operandStack.pop();
-        mergeGotoState(dflt);
+        mergeGotoState(dflt, savedVariableState);
         for (Label label : labels) {
-            mergeGotoState(label);
+            mergeGotoState(label, savedVariableState);
         }
         super.visitTableSwitchInsn(min, max, dflt, labels);
         sanityCheck();
@@ -713,9 +654,9 @@ public class CoreMethodAdapter<T> extends MethodVisitor {
     @Override
     public void visitLookupSwitchInsn(Label dflt, int[] keys, Label[] labels) {
         operandStack.pop();
-        mergeGotoState(dflt);
+        mergeGotoState(dflt, savedVariableState);
         for (Label label : labels) {
-            mergeGotoState(label);
+            mergeGotoState(label, savedVariableState);
         }
         super.visitLookupSwitchInsn(dflt, keys, labels);
         sanityCheck();
