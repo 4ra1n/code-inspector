@@ -11,6 +11,8 @@
 
 ![](images/00000.png)
 
+由于没有真正的执行，例如无法识别过滤等操作，所以会存在误报`false positive`
+
 ## 成果
 
 以下靶机存在`JDK 8`下编译打包
@@ -212,7 +214,19 @@ public static void testRCE() {
 
 （1）数组`AASTORE`指令的处理
 
+对数组某个位置赋值的指令一般如下
+
+```text
+ANEWARRAY java/lang/String
+DUP
+ICONST_0
+ALOAD 1
+AASTORE
+```
+
 如果设置到数组的新元素是污点，那么执行`AASTORE`指令后栈顶的`array ref`也应设为污点
+
+（`AASTORE`指令弹出三个参数，此时栈顶被`DUP`的另一份`array ref`是保存污点元素的数组引用）
 
 ```java
 @Override
@@ -232,6 +246,10 @@ public void visitInsn(int opcode) {
 （2）处理`getter`方法的传递
 
 调用非静态方法且以`get`开头只有一个参数，当栈顶为污点时可以确定是`getter`方法，应该进行污点传递
+
+```text
+INVOKEVIRTUAL xxx/Obj.getXxx ()Ljava/lang/String;
+```
 
 ```java
 if (operandStack.size() > 0 &&
@@ -260,6 +278,8 @@ if (operandStack.size() > 0 &&
 - java/io/BufferedInputStream#<init>
 - java/io/File#<init>
 - java/io/FileInputStream#<init>
+
+ref: https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-6.html
 
 ## 新规则
 
