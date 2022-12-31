@@ -16,11 +16,6 @@ public class CoreMethodAdapter<T> extends MethodVisitor {
     private final AnalyzerAdapter analyzerAdapter;
     private final int access;
     private final String desc;
-
-    private SavedVariableState<T> savedVariableState = new SavedVariableState<T>();
-    private Map<Label, SavedVariableState<T>> gotoStates = new HashMap<Label, SavedVariableState<T>>();
-    private final Set<Label> exceptionHandlerLabels = new HashSet<>();
-
     protected OperandStack<T> operandStack;
     protected LocalVariables<T> localVariables;
 
@@ -37,16 +32,6 @@ public class CoreMethodAdapter<T> extends MethodVisitor {
     private void sanityCheck() {
         if (analyzerAdapter.stack != null && operandStack.size() != analyzerAdapter.stack.size()) {
             throw new IllegalStateException("bad stack size");
-        }
-    }
-
-    private void mergeGotoState(Label label, SavedVariableState savedVariableState) {
-        if (gotoStates.containsKey(label)) {
-            SavedVariableState combinedState = new SavedVariableState(gotoStates.get(label));
-            combinedState.combine(savedVariableState);
-            gotoStates.put(label, combinedState);
-        } else {
-            gotoStates.put(label, new SavedVariableState(savedVariableState));
         }
     }
 
@@ -605,20 +590,7 @@ public class CoreMethodAdapter<T> extends MethodVisitor {
             default:
                 throw new IllegalStateException("unsupported opcode: " + opcode);
         }
-        mergeGotoState(label, savedVariableState);
         super.visitJumpInsn(opcode, label);
-        sanityCheck();
-    }
-
-    @Override
-    public void visitLabel(Label label) {
-        if (gotoStates.containsKey(label)) {
-            savedVariableState = new SavedVariableState(gotoStates.get(label));
-        }
-        if (exceptionHandlerLabels.contains(label)) {
-            operandStack.push(new HashSet<>());
-        }
-        super.visitLabel(label);
         sanityCheck();
     }
 
@@ -635,34 +607,6 @@ public class CoreMethodAdapter<T> extends MethodVisitor {
     }
 
     @Override
-    public void visitIincInsn(int var, int increment) {
-        super.visitIincInsn(var, increment);
-        sanityCheck();
-    }
-
-    @Override
-    public void visitTableSwitchInsn(int min, int max, Label dflt, Label... labels) {
-        operandStack.pop();
-        mergeGotoState(dflt, savedVariableState);
-        for (Label label : labels) {
-            mergeGotoState(label, savedVariableState);
-        }
-        super.visitTableSwitchInsn(min, max, dflt, labels);
-        sanityCheck();
-    }
-
-    @Override
-    public void visitLookupSwitchInsn(Label dflt, int[] keys, Label[] labels) {
-        operandStack.pop();
-        mergeGotoState(dflt, savedVariableState);
-        for (Label label : labels) {
-            mergeGotoState(label, savedVariableState);
-        }
-        super.visitLookupSwitchInsn(dflt, keys, labels);
-        sanityCheck();
-    }
-
-    @Override
     public void visitMultiANewArrayInsn(String desc, int dims) {
         for (int i = 0; i < dims; i++) {
             operandStack.pop();
@@ -670,31 +614,5 @@ public class CoreMethodAdapter<T> extends MethodVisitor {
         operandStack.push();
         super.visitMultiANewArrayInsn(desc, dims);
         sanityCheck();
-    }
-
-    @Override
-    public AnnotationVisitor visitInsnAnnotation(int typeRef, TypePath typePath, String desc, boolean visible) {
-        return super.visitInsnAnnotation(typeRef, typePath, desc, visible);
-    }
-
-    @Override
-    public void visitTryCatchBlock(Label start, Label end, Label handler, String type) {
-        exceptionHandlerLabels.add(handler);
-        super.visitTryCatchBlock(start, end, handler, type);
-    }
-
-    @Override
-    public AnnotationVisitor visitTryCatchAnnotation(int typeRef, TypePath typePath, String desc, boolean visible) {
-        return super.visitTryCatchAnnotation(typeRef, typePath, desc, visible);
-    }
-
-    @Override
-    public void visitMaxs(int maxStack, int maxLocals) {
-        super.visitMaxs(maxStack, maxLocals);
-    }
-
-    @Override
-    public void visitEnd() {
-        super.visitEnd();
     }
 }
