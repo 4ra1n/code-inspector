@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="code.inspector.form.module.RCEModule">
+  <grid id="27dc6" binding="parentPanel" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+    <margin top="0" left="0" bottom="0" right="0"/>
+    <constraints>
+      <xy x="20" y="20" width="699" height="400"/>
+    </constraints>
+    <properties/>
+    <border type="none"/>
+    <children>
+      <grid id="1d008" binding="rcePanel" layout-manager="GridLayoutManager" row-count="6" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+        <margin top="0" left="0" bottom="0" right="0"/>
+        <constraints>
+          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties/>
+        <border type="none" title="RCE Module"/>
+        <children>
+          <component id="c8876" class="javax.swing.JCheckBox" binding="runtimeExecCheckBox" default-binding="true">
+            <constraints>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="1" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="runtime exec"/>
+            </properties>
+          </component>
+          <component id="f5ac9" class="javax.swing.JTextArea" binding="runtimeArea">
+            <constraints>
+              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="50"/>
+              </grid>
+            </constraints>
+            <properties>
+              <editable value="false"/>
+              <font name="Consolas" size="12"/>
+              <foreground color="-9097"/>
+              <text value="String cmd = &quot;cmd &quot; + input;&#10;Runtime.getRuntime().exec(cmd);"/>
+            </properties>
+          </component>
+          <component id="2edbd" class="javax.swing.JCheckBox" binding="processBuilderCheckBox">
+            <constraints>
+              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="1" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="process builder start"/>
+            </properties>
+          </component>
+          <component id="314f" class="javax.swing.JTextArea" binding="processArea">
+            <constraints>
+              <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="50"/>
+              </grid>
+            </constraints>
+            <properties>
+              <editable value="false"/>
+              <font name="Consolas" size="12"/>
+              <foreground color="-9097"/>
+              <text value="String cmd = &quot;cmd &quot; + input;&#10;new ProcessBuilder(cmd).start();"/>
+            </properties>
+          </component>
+          <component id="d36bc" class="javax.swing.JCheckBox" binding="groovyShellEvaluateCheckBox">
+            <constraints>
+              <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="1" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="groovy shell evaluate"/>
+            </properties>
+          </component>
+          <component id="7aa94" class="javax.swing.JTextArea" binding="groovyArea">
+            <constraints>
+              <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="50"/>
+              </grid>
+            </constraints>
+            <properties>
+              <editable value="false"/>
+              <font name="Consolas" size="12"/>
+              <foreground color="-9097"/>
+              <text value="GroovyShell shell = new GroovyShell();&#10;shell.evaluate(input);"/>
+            </properties>
+          </component>
+          <component id="111d5" class="javax.swing.JButton" binding="saveConfigButton" default-binding="true">
+            <constraints>
+              <grid row="5" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Save Config"/>
+            </properties>
+          </component>
+          <component id="94cc1" class="javax.swing.JCheckBox" binding="jndiInjectionCheckBox" default-binding="true">
+            <constraints>
+              <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="1" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="jndi injection"/>
+            </properties>
+          </component>
+          <component id="9e39d" class="javax.swing.JTextArea" binding="jndiArea">
+            <constraints>
+              <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="50"/>
+              </grid>
+            </constraints>
+            <properties>
+              <editable value="false"/>
+              <font name="Consolas" size="12"/>
+              <foreground color="-9097"/>
+              <text value="Context context = new InitialContext();&#10;context.lookup(input);"/>
+            </properties>
+          </component>
+          <component id="a8603" class="javax.swing.JCheckBox" binding="spELCheckBox">
+            <constraints>
+              <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="1" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="spring el rce"/>
+            </properties>
+          </component>
+          <component id="64d3c" class="javax.swing.JTextArea" binding="spELArea">
+            <constraints>
+              <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="50"/>
+              </grid>
+            </constraints>
+            <properties>
+              <editable value="false"/>
+              <font name="Consolas" size="12"/>
+              <foreground color="-9097"/>
+              <text value="ExpressionParser parser = new SpelExpressionParser();&#10;EvaluationContext evaluationContext = new StandardEvaluationContext();&#10;parser.parseExpression(input).getValue(evaluationContext);"/>
+            </properties>
+          </component>
+        </children>
+      </grid>
+    </children>
+  </grid>
+</form>

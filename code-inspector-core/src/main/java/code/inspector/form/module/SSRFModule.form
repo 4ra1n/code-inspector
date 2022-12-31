@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="code.inspector.form.module.SSRFModule">
+  <grid id="27dc6" binding="parentPanel" layout-manager="GridLayoutManager" row-count="5" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+    <margin top="0" left="0" bottom="0" right="0"/>
+    <constraints>
+      <xy x="20" y="20" width="646" height="400"/>
+    </constraints>
+    <properties/>
+    <border type="none" title="SSRF Module"/>
+    <children>
+      <component id="6b592" class="javax.swing.JCheckBox" binding="httpUrlConnectionCheckBox" default-binding="true">
+        <constraints>
+          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="1" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="http url connection"/>
+        </properties>
+      </component>
+      <component id="78a95" class="javax.swing.JTextArea" binding="httpUrlConnectionArea">
+        <constraints>
+          <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
+            <preferred-size width="150" height="50"/>
+          </grid>
+        </constraints>
+        <properties>
+          <editable value="false"/>
+          <font name="Consolas" size="12"/>
+          <foreground color="-9097"/>
+          <text value="URL url = new URL(input);&#10;HttpURLConnection con = (HttpURLConnection) url.openConnection();&#10;con.getInputStream();"/>
+        </properties>
+      </component>
+      <component id="bd6e3" class="javax.swing.JCheckBox" binding="apacheHttpClientCheckBox" default-binding="true">
+        <constraints>
+          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="1" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="apache http client"/>
+        </properties>
+      </component>
+      <component id="792b3" class="javax.swing.JTextArea" binding="apacheHttpArea">
+        <constraints>
+          <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
+            <preferred-size width="150" height="50"/>
+          </grid>
+        </constraints>
+        <properties>
+          <editable value="false"/>
+          <font name="Consolas" size="12"/>
+          <foreground color="-9097"/>
+          <text value="CloseableHttpClient httpClient = HttpClients.createDefault();&#10;HttpGet getRequest = new HttpGet(input);&#10;HttpResponse response = httpClient.execute(getRequest);"/>
+        </properties>
+      </component>
+      <component id="9321" class="javax.swing.JCheckBox" binding="newSocketCheckBox" default-binding="true">
+        <constraints>
+          <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="1" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="new socket"/>
+        </properties>
+      </component>
+      <component id="bb794" class="javax.swing.JTextArea" binding="socketArea">
+        <constraints>
+          <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
+            <preferred-size width="150" height="50"/>
+          </grid>
+        </constraints>
+        <properties>
+          <editable value="false"/>
+          <font name="Consolas" size="12"/>
+          <foreground color="-9097"/>
+          <text value="Socket socket = new Socket(host, port);&#10;InputStream in = socket.getInputStream();"/>
+        </properties>
+      </component>
+      <component id="63899" class="javax.swing.JCheckBox" binding="okhttpClientCheckBox" default-binding="true">
+        <constraints>
+          <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="1" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="okhttp client"/>
+        </properties>
+      </component>
+      <component id="36c5f" class="javax.swing.JTextArea" binding="okhttpClientArea">
+        <constraints>
+          <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
+            <preferred-size width="150" height="50"/>
+          </grid>
+        </constraints>
+        <properties>
+          <editable value="false"/>
+          <font name="Consolas" size="12"/>
+          <foreground color="-9097"/>
+          <text value="OkHttpClient httpClient = new OkHttpClient();&#10;Request request = new Request.Builder()&#10;                    .url(input)&#10;                    .build();&#10;Response response = httpClient.newCall(request).execute();"/>
+        </properties>
+      </component>
+      <component id="dd48e" class="javax.swing.JButton" binding="saveConfigButton" default-binding="true">
+        <constraints>
+          <grid row="4" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Save Config"/>
+        </properties>
+      </component>
+    </children>
+  </grid>
+</form>

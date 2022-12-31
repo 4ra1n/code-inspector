@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="code.inspector.form.module.DeserializationModule">
+  <grid id="27dc6" binding="parentPanel" layout-manager="GridLayoutManager" row-count="7" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+    <margin top="0" left="0" bottom="0" right="0"/>
+    <constraints>
+      <xy x="20" y="20" width="562" height="400"/>
+    </constraints>
+    <properties/>
+    <border type="none" title="Deserialization Module"/>
+    <children>
+      <component id="c216e" class="javax.swing.JCheckBox" binding="jdkReadObjectCheckBox" default-binding="true">
+        <constraints>
+          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="jdk read object"/>
+        </properties>
+      </component>
+      <component id="119d2" class="javax.swing.JTextArea" binding="jdkArea">
+        <constraints>
+          <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
+            <preferred-size width="150" height="50"/>
+          </grid>
+        </constraints>
+        <properties>
+          <editable value="false"/>
+          <font name="Consolas" size="12"/>
+          <foreground color="-9097"/>
+          <text value="ObjectInputStream ois = new ObjectInputStream(&#10;                    new ByteArrayInputStream(input));&#10;Object o = ois.readObject();"/>
+        </properties>
+      </component>
+      <component id="b90fb" class="javax.swing.JCheckBox" binding="fastjsonParseCheckBox" default-binding="true">
+        <constraints>
+          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="fastjson parse"/>
+        </properties>
+      </component>
+      <component id="c4403" class="javax.swing.JTextArea" binding="fastjsonArea">
+        <constraints>
+          <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
+            <preferred-size width="150" height="50"/>
+          </grid>
+        </constraints>
+        <properties>
+          <editable value="false"/>
+          <font name="Consolas" size="12"/>
+          <foreground color="-9097"/>
+          <text value="JSON.parse(input);&#10;JSON.parseArray(input);&#10;JSON.parseObject(input);"/>
+        </properties>
+      </component>
+      <component id="bf011" class="javax.swing.JCheckBox" binding="snakeyamlLoadCheckBox" default-binding="true">
+        <constraints>
+          <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="snakeyaml load"/>
+        </properties>
+      </component>
+      <component id="e7c7a" class="javax.swing.JTextArea" binding="snakeyamlArea">
+        <constraints>
+          <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
+            <preferred-size width="150" height="50"/>
+          </grid>
+        </constraints>
+        <properties>
+          <editable value="false"/>
+          <font name="Consolas" size="12"/>
+          <foreground color="-9097"/>
+          <text value="Yaml yaml = new Yaml();&#10;yaml.load(input);"/>
+        </properties>
+      </component>
+      <component id="40462" class="javax.swing.JCheckBox" binding="hessianReadObjectCheckBox" default-binding="true">
+        <constraints>
+          <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="hessian read object"/>
+        </properties>
+      </component>
+      <component id="2c446" class="javax.swing.JTextArea" binding="hessianArea">
+        <constraints>
+          <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
+            <preferred-size width="150" height="50"/>
+          </grid>
+        </constraints>
+        <properties>
+          <editable value="false"/>
+          <font name="Consolas" size="12"/>
+          <foreground color="-9097"/>
+          <text value="Hessian2Input in = new Hessian2Input(&#10;                    new ByteArrayInputStream(input));&#10;Object obj = in.readObject();"/>
+        </properties>
+      </component>
+      <component id="6c570" class="javax.swing.JButton" binding="saveConfigButton" default-binding="true">
+        <constraints>
+          <grid row="6" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Save Config"/>
+        </properties>
+      </component>
+      <component id="423d2" class="javax.swing.JCheckBox" binding="jacksonReadCheckBox" default-binding="true">
+        <constraints>
+          <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="jackson read"/>
+        </properties>
+      </component>
+      <component id="b4e78" class="javax.swing.JTextArea" binding="jacksonArea">
+        <constraints>
+          <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
+            <preferred-size width="150" height="50"/>
+          </grid>
+        </constraints>
+        <properties>
+          <editable value="false"/>
+          <font name="Consolas" size="12"/>
+          <foreground color="-9097"/>
+          <text value="ObjectMapper mapper = new ObjectMapper();&#10;mapper.enableDefaultTyping();&#10;mapper.readValue(input, User.class);"/>
+        </properties>
+      </component>
+      <component id="2ad77" class="javax.swing.JCheckBox" binding="xmlDecodeCheckBox">
+        <constraints>
+          <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="xml decoder "/>
+        </properties>
+      </component>
+      <component id="5e162" class="javax.swing.JTextArea" binding="xmlArea">
+        <constraints>
+          <grid row="5" column="1" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
+            <preferred-size width="150" height="50"/>
+          </grid>
+        </constraints>
+        <properties>
+          <editable value="false"/>
+          <font name="Consolas" size="12"/>
+          <foreground color="-9097"/>
+          <text value="XMLDecoder xmlDecoder = new XMLDecoder(bis);&#10;xmlDecoder.readObject();"/>
+        </properties>
+      </component>
+    </children>
+  </grid>
+</form>

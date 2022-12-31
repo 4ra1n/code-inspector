@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="code.inspector.form.module.SQLModule">
+  <grid id="27dc6" binding="parentPanel" layout-manager="GridLayoutManager" row-count="7" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+    <margin top="0" left="0" bottom="0" right="0"/>
+    <constraints>
+      <xy x="20" y="20" width="723" height="436"/>
+    </constraints>
+    <properties/>
+    <border type="none" title="SQL Injection Module"/>
+    <children>
+      <component id="d5245" class="javax.swing.JCheckBox" binding="jdbcTemplateUpdateCheckBox" default-binding="true">
+        <constraints>
+          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="1" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="jdbc template update"/>
+        </properties>
+      </component>
+      <component id="e6af1" class="javax.swing.JTextArea" binding="templateUpdateArea">
+        <constraints>
+          <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
+            <preferred-size width="150" height="50"/>
+          </grid>
+        </constraints>
+        <properties>
+          <editable value="false"/>
+          <font name="Consolas" size="12"/>
+          <foreground color="-9097"/>
+          <text value="String sql = &quot;sql&quot; + input + &quot;sql&quot;;&#10;jdbcTemplate.update(sql);"/>
+        </properties>
+      </component>
+      <component id="11c25" class="javax.swing.JCheckBox" binding="jdbcTemplateExecuteCheckBox" default-binding="true">
+        <constraints>
+          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="1" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="jdbc template execute"/>
+        </properties>
+      </component>
+      <component id="aa2f9" class="javax.swing.JTextArea" binding="templateExecuteArea">
+        <constraints>
+          <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
+            <preferred-size width="150" height="50"/>
+          </grid>
+        </constraints>
+        <properties>
+          <editable value="false"/>
+          <font name="Consolas" size="12"/>
+          <foreground color="-9097"/>
+          <text value="String sql = &quot;sql&quot; + input + &quot;sql&quot;;&#10;jdbcTemplate.execute(sql);"/>
+        </properties>
+      </component>
+      <component id="c0ee7" class="javax.swing.JCheckBox" binding="jdbcTemplateQueryCheckBox" default-binding="true">
+        <constraints>
+          <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="1" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="jdbc template query"/>
+        </properties>
+      </component>
+      <component id="afdc9" class="javax.swing.JTextArea" binding="queryAnyArea">
+        <constraints>
+          <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
+            <preferred-size width="150" height="50"/>
+          </grid>
+        </constraints>
+        <properties>
+          <editable value="false"/>
+          <font name="Consolas" size="12"/>
+          <foreground color="-9097"/>
+          <text value="String sql = &quot;sql&quot; + input + &quot;sql&quot;;&#10;jdbcTemplate.queryForList(sql);&#10;jdbcTemplate.queryForMap(sql);&#10;jdbcTemplate.queryForRowSet(sql);&#10;jdbcTemplate.queryForStream(sql, new BeanPropertyRowMapper&lt;&gt;(User.class));&#10;jdbcTemplate.query(sql, new BeanPropertyRowMapper&lt;&gt;(User.class));&#10;jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper&lt;&gt;(User.class));"/>
+        </properties>
+      </component>
+      <component id="78976" class="javax.swing.JCheckBox" binding="executeQueryCheckBox" default-binding="true">
+        <constraints>
+          <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="1" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="execute query"/>
+        </properties>
+      </component>
+      <component id="953b2" class="javax.swing.JTextArea" binding="executeQueryArea">
+        <constraints>
+          <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
+            <preferred-size width="150" height="50"/>
+          </grid>
+        </constraints>
+        <properties>
+          <editable value="false"/>
+          <font name="Consolas" size="12"/>
+          <foreground color="-9097"/>
+          <text value="String sql = &quot;sql&quot; + input + &quot;sql&quot;;&#10;Statement stmt = conn.createStatement();&#10;stmt.executeQuery(sql);"/>
+        </properties>
+      </component>
+      <component id="444de" class="javax.swing.JCheckBox" binding="executeUpdateCheckBox" default-binding="true">
+        <constraints>
+          <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="1" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="execute update"/>
+        </properties>
+      </component>
+      <component id="df591" class="javax.swing.JTextArea" binding="executeUpdateArea">
+        <constraints>
+          <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
+            <preferred-size width="150" height="50"/>
+          </grid>
+        </constraints>
+        <properties>
+          <editable value="false"/>
+          <font name="Consolas" size="12"/>
+          <foreground color="-9097"/>
+          <text value="String sql = &quot;sql&quot; + input + &quot;sql&quot;;&#10;Statement stmt = conn.createStatement();&#10;stmt.executeUpdate(sql);"/>
+        </properties>
+      </component>
+      <component id="49b1c" class="javax.swing.JCheckBox" binding="executeCheckBox" default-binding="true">
+        <constraints>
+          <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="1" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="execute"/>
+        </properties>
+      </component>
+      <component id="888ed" class="javax.swing.JTextArea" binding="executeArea">
+        <constraints>
+          <grid row="5" column="1" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
+            <preferred-size width="150" height="50"/>
+          </grid>
+        </constraints>
+        <properties>
+          <editable value="false"/>
+          <font name="Consolas" size="12"/>
+          <foreground color="-9097"/>
+          <text value="String sql = &quot;sql&quot; + input + &quot;sql&quot;;&#10;Statement stmt = conn.createStatement();&#10;stmt.execute(sql);"/>
+        </properties>
+      </component>
+      <component id="a231d" class="javax.swing.JButton" binding="saveConfigButton" default-binding="true">
+        <constraints>
+          <grid row="6" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Save Config"/>
+        </properties>
+      </component>
+    </children>
+  </grid>
+</form>

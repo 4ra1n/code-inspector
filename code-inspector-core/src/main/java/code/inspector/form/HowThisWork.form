@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="code.inspector.form.HowThisWork">
+  <grid id="27dc6" binding="workPanel" layout-manager="GridLayoutManager" row-count="9" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+    <margin top="0" left="0" bottom="0" right="0"/>
+    <constraints>
+      <xy x="20" y="20" width="500" height="400"/>
+    </constraints>
+    <properties/>
+    <border type="none" title="steps"/>
+    <children>
+      <component id="7256f" class="javax.swing.JLabel" binding="firstLabel">
+        <constraints>
+          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="1" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="1. unzip jar and parse class files"/>
+        </properties>
+      </component>
+      <component id="8364d" class="javax.swing.JLabel" binding="secondLabel">
+        <constraints>
+          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="1" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="2. discover all classes and metdhos"/>
+        </properties>
+      </component>
+      <component id="2a745" class="javax.swing.JLabel" binding="thirdLabel">
+        <constraints>
+          <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="1" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="3. build inheritance between classes"/>
+        </properties>
+      </component>
+      <component id="9bf4b" class="javax.swing.JLabel" binding="fourthLabel">
+        <constraints>
+          <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="1" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="4. find all method call in each methods"/>
+        </properties>
+      </component>
+      <component id="a5509" class="javax.swing.JLabel" binding="fifthLabel">
+        <constraints>
+          <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="1" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="5. topological sort methods"/>
+        </properties>
+      </component>
+      <component id="6e6e1" class="javax.swing.JLabel" binding="sixthLabel">
+        <constraints>
+          <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="1" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="6. get args taint between method calls"/>
+        </properties>
+      </component>
+      <component id="75a43" class="javax.swing.JLabel" binding="seventhLabel">
+        <constraints>
+          <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="1" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="7. parse spring mapping and set it to the source   "/>
+        </properties>
+      </component>
+      <component id="c44f4" class="javax.swing.JLabel" binding="eighthLabel">
+        <constraints>
+          <grid row="7" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="1" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="8. start vulnerability scan (some modules)"/>
+        </properties>
+      </component>
+      <component id="3b09" class="javax.swing.JLabel" binding="ninthLabel">
+        <constraints>
+          <grid row="8" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="1" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="9. simulate jvm stack frame for taint analysis"/>
+        </properties>
+      </component>
+    </children>
+  </grid>
+</form>

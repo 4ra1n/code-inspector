@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>n1ar4</groupId>
+    <artifactId>code-inspector</artifactId>
+    <packaging>pom</packaging>
+    <version>0.1-beta</version>
+
+    <modules>
+        <module>code-inspector-model</module>
+        <module>code-inspector-core</module>
+        <module>code-inspector-const</module>
+        <module>code-inspector-starter</module>
+        <module>code-inspector-jvm</module>
+        <module>code-inspector-spring</module>
+        <module>code-inspector-api</module>
+        <module>code-inspector-build</module>
+        <module>code-inspector-render</module>
+        <module>code-inspector-demo</module>
+    </modules>
+
+    <properties>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
+        <asm.version>9.4</asm.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.ow2.asm</groupId>
+            <artifactId>asm</artifactId>
+            <version>${asm.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.ow2.asm</groupId>
+            <artifactId>asm-commons</artifactId>
+            <version>${asm.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.ow2.asm</groupId>
+            <artifactId>asm-util</artifactId>
+            <version>${asm.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.formdev</groupId>
+            <artifactId>flatlaf</artifactId>
+            <version>3.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.intellij</groupId>
+            <artifactId>forms_rt</artifactId>
+            <version>7.0.3</version>
+        </dependency>
+    </dependencies>
+</project>

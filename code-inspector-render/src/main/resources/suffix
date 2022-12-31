@@ -1,0 +1,12 @@
+</table>
+<footer class="footer py-3 bg-dark text-light">
+    <div class="container">
+                <div>
+                    <p>Author <span class="badge badge-success">4ra1n</span></p>
+                    <p>Github <a href="https://github.com/4ra1n/code-inspector">
+                        https://github.com/4ra1n/code-inspector</a></p>
+                </div>
+    </div>
+</footer>
+</body>
+</html>

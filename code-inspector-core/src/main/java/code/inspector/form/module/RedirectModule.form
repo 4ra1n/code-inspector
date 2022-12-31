@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="code.inspector.form.module.RedirectModule">
+  <grid id="27dc6" binding="parentPanel" layout-manager="GridLayoutManager" row-count="4" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+    <margin top="0" left="0" bottom="0" right="0"/>
+    <constraints>
+      <xy x="20" y="20" width="590" height="400"/>
+    </constraints>
+    <properties/>
+    <border type="none" title="Redirect Module"/>
+    <children>
+      <component id="28cd6" class="javax.swing.JCheckBox" binding="sendRedirectCheckBox">
+        <constraints>
+          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="1" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="servlet send redirect"/>
+        </properties>
+      </component>
+      <component id="92dc7" class="javax.swing.JTextArea" binding="sendRedirectArea">
+        <constraints>
+          <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
+            <preferred-size width="150" height="50"/>
+          </grid>
+        </constraints>
+        <properties>
+          <editable value="false"/>
+          <font name="Consolas" size="12"/>
+          <foreground color="-9097"/>
+          <text value="@RequestMapping(&quot;/redirect&quot;)&#10;public void redirect1(HttpServletRequest request,&#10;                      HttpServletResponse response) {&#10;    String newUrl = request.getParameter(&quot;input&quot;);&#10;    response.sendRedirect(newUrl);&#10;}&#10;"/>
+        </properties>
+      </component>
+      <component id="6d0b1" class="javax.swing.JCheckBox" binding="stringRedirectCheckBox">
+        <constraints>
+          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="1" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="return string redirect"/>
+        </properties>
+      </component>
+      <component id="89ae3" class="javax.swing.JTextArea" binding="returnStringArea">
+        <constraints>
+          <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
+            <preferred-size width="150" height="50"/>
+          </grid>
+        </constraints>
+        <properties>
+          <editable value="false"/>
+          <font name="Consolas" size="12"/>
+          <foreground color="-9097"/>
+          <text value="@RequestMapping(&quot;/redirect&quot;)&#10;public String redirect(String input) {&#10;    String redirect = &quot;redirect://&quot; + input;&#10;    return redirect;&#10;}"/>
+        </properties>
+      </component>
+      <component id="2a514" class="javax.swing.JCheckBox" binding="mavRedirectCheckBox">
+        <constraints>
+          <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="1" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="model and view redirect"/>
+        </properties>
+      </component>
+      <component id="afbfb" class="javax.swing.JTextArea" binding="mavArea">
+        <constraints>
+          <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
+            <preferred-size width="150" height="50"/>
+          </grid>
+        </constraints>
+        <properties>
+          <editable value="false"/>
+          <font name="Consolas" size="12"/>
+          <foreground color="-9097"/>
+          <text value="@RequestMapping(&quot;/redirect&quot;)&#10;public ModelAndView redirect(String input) {&#10;    String redirect = &quot;redirect://&quot; + input;&#10;    return new ModelAndView(redirect);&#10;}"/>
+        </properties>
+      </component>
+      <component id="157ac" class="javax.swing.JButton" binding="saveConfigButton" default-binding="true">
+        <constraints>
+          <grid row="3" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Save Config"/>
+        </properties>
+      </component>
+    </children>
+  </grid>
+</form>
