@@ -279,6 +279,9 @@ if (operandStack.size() > 0 &&
 - java/io/File#<init>
 - java/io/FileInputStream#<init>
 
+（4）关于跳转指令
+由于没有真正的执行，所以跳转指令是没有意义的，例如`if`和`for`循环都是无法处理的
+
 ref: https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-6.html
 
 ## 新规则
