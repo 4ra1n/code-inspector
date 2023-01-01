@@ -671,18 +671,6 @@ public class CoreMethodAdapter<T> extends MethodVisitor {
             for (Set<T> original : oldOperandStack.getList()) {
                 newOperandStack.add(new HashSet<>(original));
             }
-            for (int i = 0; i < localVariables.size(); i++) {
-                while (newLocalVariables.size()<=i){
-                    newLocalVariables.add(new HashSet<>());
-                }
-                newLocalVariables.get(i).addAll(localVariables.get(i));
-            }
-            for (int i = 0; i < operandStack.size(); i++) {
-                while (newOperandStack.size()<=i){
-                    newOperandStack.add(new HashSet<>());
-                }
-                newOperandStack.get(i).addAll(operandStack.get(i));
-            }
             this.operandStack = newOperandStack;
             this.localVariables = newLocalVariables;
         }

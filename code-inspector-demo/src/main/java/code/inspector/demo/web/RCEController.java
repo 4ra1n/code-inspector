@@ -28,7 +28,7 @@ public class RCEController {
         Expression expr = null;
         if (input.contains("test")) {
             evaluationContext = new StandardEvaluationContext();
-        }else {
+        } else {
             evaluationContext = new SimpleEvaluationContext.Builder().build();
         }
         expr = parser.parseExpression(input);
