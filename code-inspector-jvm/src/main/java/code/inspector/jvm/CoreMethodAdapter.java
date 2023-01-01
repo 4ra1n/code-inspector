@@ -16,6 +16,10 @@ public class CoreMethodAdapter<T> extends MethodVisitor {
     private final AnalyzerAdapter analyzerAdapter;
     private final int access;
     private final String desc;
+
+    private final Map<Label, GotoState<T>> gotoStates = new HashMap<>();
+    private final Set<Label> exceptionHandlerLabels = new HashSet<>();
+
     protected OperandStack<T> operandStack;
     protected LocalVariables<T> localVariables;
 
@@ -32,6 +36,61 @@ public class CoreMethodAdapter<T> extends MethodVisitor {
     private void sanityCheck() {
         if (analyzerAdapter.stack != null && operandStack.size() != analyzerAdapter.stack.size()) {
             throw new IllegalStateException("bad stack size");
+        }
+    }
+
+    private void mergeGotoState(Label label) {
+        if (gotoStates.containsKey(label)) {
+            GotoState<T> state = gotoStates.get(label);
+            // old -> label
+            LocalVariables<T> oldLocalVariables = state.getLocalVariables();
+            OperandStack<T> oldOperandStack = state.getOperandStack();
+            // new -> null
+            LocalVariables<T> newLocalVariables = new LocalVariables<>();
+            OperandStack<T> newOperandStack = new OperandStack<>();
+            // init new
+            for (Set<T> original : oldLocalVariables.getList()) {
+                newLocalVariables.add(new HashSet<>(original));
+            }
+            for (Set<T> original : oldOperandStack.getList()) {
+                newOperandStack.add(new HashSet<>(original));
+            }
+            // add current state
+            for (int i = 0; i < localVariables.size(); i++) {
+                while (newLocalVariables.size()<=i){
+                    newLocalVariables.add(new HashSet<>());
+                }
+                newLocalVariables.get(i).addAll(localVariables.get(i));
+            }
+            for (int i = 0; i < operandStack.size(); i++) {
+                while (newOperandStack.size()<=i){
+                    newOperandStack.add(new HashSet<>());
+                }
+                newOperandStack.get(i).addAll(operandStack.get(i));
+            }
+            // set new state
+            GotoState<T> newGotoState = new GotoState<>();
+            newGotoState.setOperandStack(newOperandStack);
+            newGotoState.setLocalVariables(newLocalVariables);
+            gotoStates.put(label, newGotoState);
+        } else {
+            LocalVariables<T> oldLocalVariables = localVariables;
+            OperandStack<T> oldOperandStack = operandStack;
+            // new -> null
+            LocalVariables<T> newLocalVariables = new LocalVariables<>();
+            OperandStack<T> newOperandStack = new OperandStack<>();
+            // init new
+            for (Set<T> original : oldLocalVariables.getList()) {
+                newLocalVariables.add(new HashSet<>(original));
+            }
+            for (Set<T> original : oldOperandStack.getList()) {
+                newOperandStack.add(new HashSet<>(original));
+            }
+            // set new state
+            GotoState<T> newGotoState = new GotoState<>();
+            newGotoState.setOperandStack(newOperandStack);
+            newGotoState.setLocalVariables(newLocalVariables);
+            gotoStates.put(label, newGotoState);
         }
     }
 
@@ -590,7 +649,47 @@ public class CoreMethodAdapter<T> extends MethodVisitor {
             default:
                 throw new IllegalStateException("unsupported opcode: " + opcode);
         }
+        mergeGotoState(label);
         super.visitJumpInsn(opcode, label);
+        sanityCheck();
+    }
+
+    @Override
+    public void visitLabel(Label label) {
+        if (gotoStates.containsKey(label)) {
+            GotoState<T> state = gotoStates.get(label);
+            // old -> label
+            LocalVariables<T> oldLocalVariables = state.getLocalVariables();
+            OperandStack<T> oldOperandStack = state.getOperandStack();
+            // new -> null
+            LocalVariables<T> newLocalVariables = new LocalVariables<>();
+            OperandStack<T> newOperandStack = new OperandStack<>();
+            // init new
+            for (Set<T> original : oldLocalVariables.getList()) {
+                newLocalVariables.add(new HashSet<>(original));
+            }
+            for (Set<T> original : oldOperandStack.getList()) {
+                newOperandStack.add(new HashSet<>(original));
+            }
+            for (int i = 0; i < localVariables.size(); i++) {
+                while (newLocalVariables.size()<=i){
+                    newLocalVariables.add(new HashSet<>());
+                }
+                newLocalVariables.get(i).addAll(localVariables.get(i));
+            }
+            for (int i = 0; i < operandStack.size(); i++) {
+                while (newOperandStack.size()<=i){
+                    newOperandStack.add(new HashSet<>());
+                }
+                newOperandStack.get(i).addAll(operandStack.get(i));
+            }
+            this.operandStack = newOperandStack;
+            this.localVariables = newLocalVariables;
+        }
+        if (exceptionHandlerLabels.contains(label)) {
+            operandStack.push(new HashSet<>());
+        }
+        super.visitLabel(label);
         sanityCheck();
     }
 
@@ -607,6 +706,34 @@ public class CoreMethodAdapter<T> extends MethodVisitor {
     }
 
     @Override
+    public void visitIincInsn(int var, int increment) {
+        super.visitIincInsn(var, increment);
+        sanityCheck();
+    }
+
+    @Override
+    public void visitTableSwitchInsn(int min, int max, Label dflt, Label... labels) {
+        operandStack.pop();
+        mergeGotoState(dflt);
+        for (Label label : labels) {
+            mergeGotoState(label);
+        }
+        super.visitTableSwitchInsn(min, max, dflt, labels);
+        sanityCheck();
+    }
+
+    @Override
+    public void visitLookupSwitchInsn(Label dflt, int[] keys, Label[] labels) {
+        operandStack.pop();
+        mergeGotoState(dflt);
+        for (Label label : labels) {
+            mergeGotoState(label);
+        }
+        super.visitLookupSwitchInsn(dflt, keys, labels);
+        sanityCheck();
+    }
+
+    @Override
     public void visitMultiANewArrayInsn(String desc, int dims) {
         for (int i = 0; i < dims; i++) {
             operandStack.pop();
@@ -614,5 +741,31 @@ public class CoreMethodAdapter<T> extends MethodVisitor {
         operandStack.push();
         super.visitMultiANewArrayInsn(desc, dims);
         sanityCheck();
+    }
+
+    @Override
+    public AnnotationVisitor visitInsnAnnotation(int typeRef, TypePath typePath, String desc, boolean visible) {
+        return super.visitInsnAnnotation(typeRef, typePath, desc, visible);
+    }
+
+    @Override
+    public void visitTryCatchBlock(Label start, Label end, Label handler, String type) {
+        exceptionHandlerLabels.add(handler);
+        super.visitTryCatchBlock(start, end, handler, type);
+    }
+
+    @Override
+    public AnnotationVisitor visitTryCatchAnnotation(int typeRef, TypePath typePath, String desc, boolean visible) {
+        return super.visitTryCatchAnnotation(typeRef, typePath, desc, visible);
+    }
+
+    @Override
+    public void visitMaxs(int maxStack, int maxLocals) {
+        super.visitMaxs(maxStack, maxLocals);
+    }
+
+    @Override
+    public void visitEnd() {
+        super.visitEnd();
     }
 }

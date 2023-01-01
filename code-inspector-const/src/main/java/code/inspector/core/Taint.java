@@ -7,4 +7,5 @@ public interface Taint {
     String PROCESS_INIT = "PROCESS_INIT";
     String MODEL_AND_VIEW = "MODEL_AND_VIEW";
     String LIST_INIT = "LIST_INIT";
+    String SPRING_STANDARD = "SPRING_STANDARD";
 }

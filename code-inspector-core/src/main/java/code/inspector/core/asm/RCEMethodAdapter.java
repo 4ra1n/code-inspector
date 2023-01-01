@@ -14,14 +14,11 @@ public class RCEMethodAdapter extends ParamTaintMethodAdapter {
 
     private static int arrayPos = -1;
 
-    private static boolean spEL = false;
-
     public RCEMethodAdapter(int methodArgIndex, Map<String, Boolean> pass, int api, MethodVisitor mv,
                             String owner, int access, String name, String desc) {
         super(methodArgIndex, api, mv, owner, access, name, desc);
         this.pass = pass;
         arrayPos = -1;
-        spEL = false;
     }
 
     @Override
@@ -85,7 +82,9 @@ public class RCEMethodAdapter extends ParamTaintMethodAdapter {
         }
 
         if (spELStandard) {
-            spEL = true;
+            super.visitMethodInsn(opcode, owner, name, desc, itf);
+            operandStack.set(0, Taint.SPRING_STANDARD);
+            return;
         }
 
         if (spELParse) {
@@ -97,20 +96,13 @@ public class RCEMethodAdapter extends ParamTaintMethodAdapter {
         }
 
         if (spELGetValue) {
-            if (operandStack.get(0).contains(Taint.PARAM_TAINT)) {
-                if (spEL) {
+            if (operandStack.get(0).contains(Taint.SPRING_STANDARD)) {
+                if (operandStack.size() > 1 &&
+                        operandStack.get(1).contains(Taint.PARAM_TAINT)) {
                     pass.put(Const.RCE_SP_EL_TYPE, true);
                 }
                 super.visitMethodInsn(opcode, owner, name, desc, itf);
                 return;
-            } else if (operandStack.size() > 1) {
-                if (operandStack.get(1).contains(Taint.PARAM_TAINT)) {
-                    if (spEL) {
-                        pass.put(Const.RCE_SP_EL_TYPE, true);
-                    }
-                    super.visitMethodInsn(opcode, owner, name, desc, itf);
-                    return;
-                }
             }
         }
 
