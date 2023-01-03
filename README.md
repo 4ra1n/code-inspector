@@ -3,7 +3,7 @@
 ![](https://img.shields.io/badge/build-passing-brightgreen)
 ![](https://img.shields.io/badge/ASM-9.4-blue)
 ![](https://img.shields.io/badge/Java-8-red)
-![](https://img.shields.io/badge/Line-6587-yellow)
+![](https://img.shields.io/badge/Line-5865-yellow)
 
 一个Java自动代码审计工具，尤其针对SpringBoot框架，也可自行改造以适配其他情况
 
@@ -22,6 +22,8 @@
 ## 使用`GUI`启动器
 
 选择好你的`Jar`包后点击`Start`即可，默认开启所有配置
+
+注意：目标`Jar`是`Java 8`编译的情况下兼容性最佳，高版本`Java`可能优化指令导致与原规则不匹配产生漏报
 
 选项：
 - import rt.jar 绝大多数情况请勿勾选
