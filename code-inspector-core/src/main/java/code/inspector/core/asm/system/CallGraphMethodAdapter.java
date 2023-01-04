@@ -9,6 +9,7 @@ import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 
+import java.util.HashSet;
 import java.util.Set;
 
 
@@ -63,6 +64,22 @@ public class CallGraphMethodAdapter extends CoreMethodAdapter<String> {
             case Opcodes.INVOKESPECIAL:
             case Opcodes.INVOKEINTERFACE:
                 if (owner.equals("java/lang/String") && name.equals("valueOf")) {
+                    Set<String> t = operandStack.get(0);
+                    super.visitMethodInsn(opcode, owner, name, desc, itf);
+                    operandStack.set(0, t);
+                    return;
+                }
+                if (owner.equals("java/lang/StringBuilder") && name.equals("append")) {
+                    Set<String> t1 = operandStack.get(0);
+                    Set<String> t2 = operandStack.get(1);
+                    Set<String> t3 = new HashSet<>();
+                    t3.addAll(t1);
+                    t3.addAll(t2);
+                    super.visitMethodInsn(opcode, owner, name, desc, itf);
+                    operandStack.get(0).addAll(t3);
+                    return;
+                }
+                if (owner.equals("java/lang/StringBuilder") && name.equals("toString")) {
                     Set<String> t = operandStack.get(0);
                     super.visitMethodInsn(opcode, owner, name, desc, itf);
                     operandStack.set(0, t);

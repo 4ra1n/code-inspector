@@ -60,4 +60,23 @@ public class RCEController {
     public String rce5(String str) {
         return rceService.rce5(str);
     }
+
+    @RequestMapping("/rce6")
+    public String rce6(String str) {
+        if(str.contains("cmd")){
+            return "error";
+        }
+        for(int i=0;i<10;i++){
+            System.out.println(i);
+            System.out.println(str);
+        }
+        rceService.rce6(str);
+        for(int i=0;i<10;i++){
+            System.out.println(i);
+            if(str.equals("test")){
+                System.out.println(str);
+            }
+        }
+        return "ok";
+    }
 }

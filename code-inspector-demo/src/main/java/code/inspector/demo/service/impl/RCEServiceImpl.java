@@ -61,4 +61,22 @@ public class RCEServiceImpl implements RCEService {
         }
         return "ok";
     }
+
+    @Override
+    public String rce6(String data) {
+        try{
+            Context context = new InitialContext();
+            Runtime runtime;
+            runtime = Runtime.getRuntime();
+            Process process = null;
+            if(runtime.equals("obj")){
+                System.out.println(runtime);
+            }
+            String finalData = "ping "+data;
+            process = RCEUtil.exec(finalData);
+        } catch (Exception ex){
+            ex.printStackTrace();
+        }
+        return "ok";
+    }
 }

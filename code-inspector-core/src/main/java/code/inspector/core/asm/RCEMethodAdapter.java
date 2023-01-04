@@ -121,6 +121,7 @@ public class RCEMethodAdapter extends ParamTaintMethodAdapter {
             if (operandStack.get(0).contains(Taint.BUILD_STRING)) {
                 super.visitMethodInsn(opcode, owner, name, desc, itf);
                 operandStack.set(0, Taint.TO_STRING);
+                operandStack.get(0).add(Taint.PARAM_TAINT);
                 return;
             }
         }

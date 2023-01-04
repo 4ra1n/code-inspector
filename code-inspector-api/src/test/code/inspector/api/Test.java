@@ -62,13 +62,13 @@ public class Test {
         System.out.println(results.size());
     }
 
-    public static void testTarget(){
+    public static void testTarget() {
         CodeInspector inspector = new CodeInspectorImpl();
         List<ResultInfo> results = inspector.analyzeRCE(
-                "D:\\JavaCode\\code-inspector\\bin\\code-inspector-demo-0.1-beta.jar",
-                false, false, false);
-        for(ResultInfo r:results){
-            System.out.println(r.getType()+":"+r.getVulName());
+                "./bin/code-inspector-demo-0.1-beta.jar",
+                true, false, false);
+        for (ResultInfo r : results) {
+            System.out.println(r.getType() + ":" + r.getVulName());
         }
     }
 
