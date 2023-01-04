@@ -63,7 +63,12 @@ public class JarUtil {
             resolve(jarPath, tmpDir);
             if (useAllLib) {
                 resolveBoot(jarPath, tmpDir);
-                Stream<Path> paths = Files.list(tmpDir.resolve("BOOT-INF/lib"));
+                Stream<Path> paths;
+                try {
+                    paths = Files.list(tmpDir.resolve("BOOT-INF/lib"));
+                } catch (Exception ignored) {
+                    paths = Files.list(tmpDir.resolve("WEB-INF/lib"));
+                }
                 paths.forEach(p -> resolveNormalJarFile(p.toFile().getAbsolutePath()));
                 paths.close();
             }
