@@ -108,8 +108,8 @@ public class Application {
         inherit();
         methodCall();
         sort(command);
-        buildCallGraphs(command);
         parseSpring(command);
+        buildCallGraphs(command);
         if (globalOptions.getOrDefault(Const.SSRF_MODULE, false)) {
             SSRFService.start(classFileByName, controllers, graphCallMap);
             resultInfoList.addAll(SSRFService.getResults());
@@ -187,6 +187,10 @@ public class Application {
         CallGraphService.start(discoveredCalls, sortedMethods, classFileByName,
                 classMap, graphCallMap, methodMap, methodImpls);
         if (command.isDebug) {
+            if (controllers.size() > 0) {
+                SpringController controller = controllers.get(1);
+                command.packageName = controller.getClassName().getName();
+            }
             Output.writeTargetCallGraphs(graphCallMap, command.packageName);
         }
     }

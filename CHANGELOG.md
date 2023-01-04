@@ -6,5 +6,6 @@
 
 更新内容：
 - [important] [bug] 分支处理的BUG #1
+- [bug] debug模式的call graph输出有问题 #5
 - [bug] 拼接字符串操作应该加入call graph默认规则 #6
 - [bug] SPEL检测逻辑需要加强 #2
