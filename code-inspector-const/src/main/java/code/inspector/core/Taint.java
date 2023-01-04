@@ -8,4 +8,5 @@ public interface Taint {
     String MODEL_AND_VIEW = "MODEL_AND_VIEW";
     String LIST_INIT = "LIST_INIT";
     String SPRING_STANDARD = "SPRING_STANDARD";
+    String YAML_INIT = "YAML_INIT";
 }

@@ -38,6 +38,8 @@ public class DesMethodAdapter extends ParamTaintMethodAdapter {
 
         boolean yamlOption = Application.globalOptions.getOrDefault(
                 Const.DESERIALIZATION_SNAKEYAML, false);
+        boolean yamlInitCondition = yamlOption && owner.equals("org/yaml/snakeyaml/Yaml") &&
+                name.equals("<init>") && desc.equals("()V");
         boolean yamlLoadCondition = yamlOption && owner.equals("org/yaml/snakeyaml/Yaml") && name.equals("load");
 
         boolean jacksonOption = Application.globalOptions.getOrDefault(
@@ -104,11 +106,19 @@ public class DesMethodAdapter extends ParamTaintMethodAdapter {
             }
         }
 
+        if (yamlInitCondition) {
+            super.visitMethodInsn(opcode, owner, name, desc, itf);
+            operandStack.set(0, Taint.YAML_INIT);
+            return;
+        }
+
         if (yamlLoadCondition) {
             if (operandStack.get(0).contains(Taint.PARAM_TAINT)) {
-                super.visitMethodInsn(opcode, owner, name, desc, itf);
-                pass.put(Const.DESERIALIZATION_SNAKEYAML, true);
-                return;
+                if (operandStack.size() > 1 && operandStack.get(1).contains(Taint.YAML_INIT)) {
+                    super.visitMethodInsn(opcode, owner, name, desc, itf);
+                    pass.put(Const.DESERIALIZATION_SNAKEYAML, true);
+                    return;
+                }
             }
         }
 
