@@ -10,3 +10,4 @@
 - [bug] 拼接字符串操作应该加入call graph默认规则 #6
 - [improve] SPEL检测逻辑需要加强 #2
 - [improve] snakeyaml 规则加强 #7
+- [feat] 应该提供对war包的支持 #3
