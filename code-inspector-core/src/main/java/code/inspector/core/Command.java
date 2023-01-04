@@ -30,6 +30,6 @@ public class Command {
         this.springBoot = true;
         this.lib = false;
         this.path = "result.html";
-        this.packageName = "org.sec";
+        this.packageName = "";
     }
 }
