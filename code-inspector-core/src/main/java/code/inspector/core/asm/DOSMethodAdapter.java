@@ -18,10 +18,19 @@ public class DOSMethodAdapter extends ParamTaintMethodAdapter {
     private final List<Label> labelList = new ArrayList<>();
     private boolean forFlag;
 
+    private final boolean arrayOption;
+    private final boolean forOption;
+    private final boolean regexOption;
+    private final boolean listOption;
+
     public DOSMethodAdapter(int methodArgIndex, Map<String, Boolean> pass, int api, MethodVisitor mv,
                             String owner, int access, String name, String desc) {
         super(methodArgIndex, api, mv, owner, access, name, desc);
         this.pass = pass;
+        this.forOption = Application.globalOptions.getOrDefault(Const.DOS_FOR_TYPE, false);
+        this.arrayOption = Application.globalOptions.getOrDefault(Const.DOS_ARRAY_TYPE, false);
+        this.regexOption = Application.globalOptions.getOrDefault(Const.DOS_REGEX_TYPE, false);
+        this.listOption = Application.globalOptions.getOrDefault(Const.DOS_LIST_TYPE, false);
     }
 
     @Override
@@ -34,8 +43,7 @@ public class DOSMethodAdapter extends ParamTaintMethodAdapter {
     public void visitJumpInsn(int opcode, Label label) {
         if (opcode == Opcodes.GOTO) {
             if (labelList.contains(label)) {
-                if (Application.globalOptions.getOrDefault(
-                        Const.DOS_FOR_TYPE,false) && this.forFlag) {
+                if (forOption && this.forFlag) {
                     pass.put(Const.DOS_FOR_TYPE, true);
                     this.forFlag = false;
                 }
@@ -52,8 +60,7 @@ public class DOSMethodAdapter extends ParamTaintMethodAdapter {
     @Override
     public void visitIntInsn(int opcode, int operand) {
         if (opcode == Opcodes.NEWARRAY) {
-            if (Application.globalOptions.getOrDefault(Const.DOS_ARRAY_TYPE,false) &&
-                    operandStack.get(0).contains(Taint.PARAM_TAINT)) {
+            if (arrayOption && operandStack.get(0).contains(Taint.PARAM_TAINT)) {
                 pass.put(Const.DOS_ARRAY_TYPE, true);
             }
         }
@@ -63,8 +70,7 @@ public class DOSMethodAdapter extends ParamTaintMethodAdapter {
     @Override
     public void visitTypeInsn(int opcode, String type) {
         if (opcode == Opcodes.ANEWARRAY) {
-            if (Application.globalOptions.getOrDefault(Const.DOS_ARRAY_TYPE,false) &&
-                    operandStack.get(0).contains(Taint.PARAM_TAINT)) {
+            if (arrayOption && operandStack.get(0).contains(Taint.PARAM_TAINT)) {
                 pass.put(Const.DOS_ARRAY_TYPE, true);
             }
         }
@@ -78,8 +84,12 @@ public class DOSMethodAdapter extends ParamTaintMethodAdapter {
                 (name.equals("matches")) &&
                 (desc.equals("(Ljava/lang/String;Ljava/lang/CharSequence;)Z"));
 
-        if (Application.globalOptions.getOrDefault(
-                Const.DOS_REGEX_TYPE,false) && patternMatches) {
+        boolean listInit = (opcode == Opcodes.INVOKESPECIAL) &&
+                (owner.equals("java/util/ArrayList")) &&
+                (name.equals("<init>")) &&
+                (desc.equals("(I)V"));
+
+        if (regexOption && patternMatches) {
             if (operandStack.get(0).contains(Taint.PARAM_TAINT)) {
                 flag.add(true);
                 super.visitMethodInsn(opcode, owner, name, desc, itf);
@@ -92,21 +102,14 @@ public class DOSMethodAdapter extends ParamTaintMethodAdapter {
             }
         }
 
-        if (Application.globalOptions.getOrDefault(
-                Const.DOS_REGEX_TYPE,false)
-                && flag.size() == 2 && !flag.contains(false)) {
+        if (regexOption && flag.size() == 2 && !flag.contains(false)) {
             pass.put(Const.DOS_REGEX_TYPE, true);
             flag = new ArrayList<>();
             super.visitMethodInsn(opcode, owner, name, desc, itf);
             return;
         }
 
-        boolean listInit = (opcode == Opcodes.INVOKESPECIAL) &&
-                (owner.equals("java/util/ArrayList")) &&
-                (name.equals("<init>")) &&
-                (desc.equals("(I)V"));
-        if (Application.globalOptions.getOrDefault(
-                Const.DOS_LIST_TYPE,false) && listInit) {
+        if (listOption && listInit) {
             if (operandStack.get(0).contains(Taint.PARAM_TAINT)) {
                 pass.put(Const.DOS_LIST_TYPE, true);
                 super.visitMethodInsn(opcode, owner, name, desc, itf);

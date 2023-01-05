@@ -11,7 +11,9 @@ public class Test {
         List<ResultInfo> results = inspector.analyzeRCE(
                 "./bin/code-inspector-demo-0.1-beta.jar",
                 false, false, false);
-        System.out.println(results.size());
+        for (ResultInfo r : results) {
+            System.out.println(r.getType() + ":" + r.getVulName());
+        }
     }
 
     public static void testSSRF() {
@@ -19,7 +21,9 @@ public class Test {
         List<ResultInfo> results = inspector.analyzeSSRF(
                 "./bin/code-inspector-demo-0.1-beta.jar",
                 false, false, false);
-        System.out.println(results.size());
+        for (ResultInfo r : results) {
+            System.out.println(r.getType() + ":" + r.getVulName());
+        }
     }
 
     public static void testDoS() {
@@ -27,7 +31,9 @@ public class Test {
         List<ResultInfo> results = inspector.analyzeDoS(
                 "./bin/code-inspector-demo-0.1-beta.jar",
                 false, false, false);
-        System.out.println(results.size());
+        for (ResultInfo r : results) {
+            System.out.println(r.getType() + ":" + r.getVulName());
+        }
     }
 
     public static void testDeserialization() {
@@ -35,7 +41,9 @@ public class Test {
         List<ResultInfo> results = inspector.analyzeDeserialization(
                 "./bin/code-inspector-demo-0.1-beta.jar",
                 false, false, false);
-        System.out.println(results.size());
+        for (ResultInfo r : results) {
+            System.out.println(r.getType() + ":" + r.getVulName());
+        }
     }
 
     public static void testSQLInjection() {
@@ -43,7 +51,9 @@ public class Test {
         List<ResultInfo> results = inspector.analyzeSQLInjection(
                 "./bin/code-inspector-demo-0.1-beta.jar",
                 false, false, false);
-        System.out.println(results.size());
+        for (ResultInfo r : results) {
+            System.out.println(r.getType() + ":" + r.getVulName());
+        }
     }
 
     public static void testRedirect() {
@@ -51,7 +61,9 @@ public class Test {
         List<ResultInfo> results = inspector.analyzeRedirect(
                 "./bin/code-inspector-demo-0.1-beta.jar",
                 false, false, false);
-        System.out.println(results.size());
+        for (ResultInfo r : results) {
+            System.out.println(r.getType() + ":" + r.getVulName());
+        }
     }
 
     public static void testAll() {
@@ -59,7 +71,9 @@ public class Test {
         List<ResultInfo> results = inspector.analyzeAll(
                 "./bin/code-inspector-demo-0.1-beta.jar",
                 false, false, false);
-        System.out.println(results.size());
+        for (ResultInfo r : results) {
+            System.out.println(r.getType() + ":" + r.getVulName());
+        }
     }
 
     public static void testTarget() {
@@ -73,6 +87,6 @@ public class Test {
     }
 
     public static void main(String[] args) {
-        testTarget();
+        testDoS();
     }
 }
