@@ -11,3 +11,4 @@
 - [improve] SPEL检测逻辑需要加强 #2
 - [improve] snakeyaml 规则加强 #7
 - [feat] 应该提供对war包的支持 #3
+- 优化代码，小幅提高扫描效率
