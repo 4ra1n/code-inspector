@@ -11,15 +11,23 @@ import java.util.Map;
 public class SSRFMethodAdapter extends ParamTaintMethodAdapter {
     private final Map<String, Boolean> pass;
 
+    private final boolean jdkOption;
+    private final boolean apacheOption;
+    private final boolean socketOption;
+    private final boolean okhttpOption;
+
     public SSRFMethodAdapter(int methodArgIndex, Map<String, Boolean> pass, int api, MethodVisitor mv,
                              String owner, int access, String name, String desc) {
         super(methodArgIndex, api, mv, owner, access, name, desc);
         this.pass = pass;
+        this.jdkOption = Application.globalOptions.getOrDefault(Const.SSRF_JDK_TYPE, false);
+        this.apacheOption = Application.globalOptions.getOrDefault(Const.SSRF_APACHE_TYPE, false);
+        this.socketOption = Application.globalOptions.getOrDefault(Const.SSRF_SOCKET_TYPE, false);
+        this.okhttpOption = Application.globalOptions.getOrDefault(Const.SSRF_OKHTTP_TYPE, false);
     }
 
     @Override
     public void visitMethodInsn(int opcode, String owner, String name, String desc, boolean itf) {
-        boolean jdkOption = Application.globalOptions.getOrDefault(Const.SSRF_JDK_TYPE, false);
         boolean urlCondition = jdkOption && owner.equals("java/net/URL") && name.equals("<init>") &&
                 desc.equals("(Ljava/lang/String;)V");
         boolean urlOpenCondition = jdkOption && owner.equals("java/net/URL") &&
@@ -27,7 +35,6 @@ public class SSRFMethodAdapter extends ParamTaintMethodAdapter {
                 desc.equals("()Ljava/net/URLConnection;");
         boolean urlOpenStream = jdkOption && owner.equals("java/net/URL") && name.equals("openStream");
 
-        boolean apacheOption = Application.globalOptions.getOrDefault(Const.SSRF_APACHE_TYPE, false);
         boolean apacheHttpInitCondition = apacheOption && owner.equals("org/apache/http/client/methods/HttpGet") &&
                 name.equals("<init>") && desc.equals("(Ljava/lang/String;)V");
         boolean apacheHttpExecuteCondition = apacheOption &&
@@ -39,13 +46,11 @@ public class SSRFMethodAdapter extends ParamTaintMethodAdapter {
         boolean apacheHttpGetExec = owner.equals("org/apache/http/impl/client/DefaultHttpClient") &
                 name.equals("execute");
 
-        boolean socketOption = Application.globalOptions.getOrDefault(Const.SSRF_SOCKET_TYPE, false);
         boolean socketInitCondition = socketOption && owner.equals("java/net/Socket") &&
                 name.equals("<init>") && desc.equals("(Ljava/lang/String;I)V");
         boolean socketInputCondition = socketOption && owner.equals("java/net/Socket") &&
                 (name.equals("getInputStream") || name.equals("getOutputStream"));
 
-        boolean okhttpOption = Application.globalOptions.getOrDefault(Const.SSRF_OKHTTP_TYPE, false);
         boolean okhttpUrlCondition = okhttpOption && (owner.equals("okhttp3/Request$Builder") ||
                 owner.equals("okhttp/Request$Builder")) &&
                 name.equals("url") && (desc.equals("(Ljava/lang/String;)Lokhttp3/Request$Builder;") ||

@@ -4,6 +4,7 @@ import code.inspector.model.ResultInfo;
 
 import java.util.List;
 
+@SuppressWarnings("all")
 public class Test {
 
     public static void testRCE() {
@@ -87,6 +88,6 @@ public class Test {
     }
 
     public static void main(String[] args) {
-        testSQLInjection();
+        testSSRF();
     }
 }
