@@ -16,12 +16,22 @@ public class RedirectMethodAdapter extends CoreMethodAdapter<String> {
     private final Map<String, Boolean> pass;
     private boolean flag;
 
+    private final boolean sendOption;
+    private final boolean stringOption;
+    private final boolean mavOption;
+
     public RedirectMethodAdapter(Map<String, Boolean> pass, int api, MethodVisitor mv,
                                  String owner, int access, String name, String desc) {
         super(api, mv, owner, access, name, desc);
         this.access = access;
         this.desc = desc;
         this.pass = pass;
+        this.sendOption = Application.globalOptions.getOrDefault(
+                Const.REDIRECT_SEND_RESPONSE_TYPE, false);
+        this.mavOption = Application.globalOptions.getOrDefault(
+                Const.REDIRECT_MODEL_AND_VIEW_TYPE, false);
+        this.stringOption = Application.globalOptions.getOrDefault(
+                Const.REDIRECT_STRING_TYPE, false);
     }
 
     @Override
@@ -42,14 +52,12 @@ public class RedirectMethodAdapter extends CoreMethodAdapter<String> {
         if (opcode == Opcodes.ARETURN) {
             if (operandStack.get(0).contains(Taint.PARAM_TAINT) ||
                     operandStack.get(0).contains(Taint.TO_STRING)) {
-                if (Application.globalOptions.getOrDefault(
-                        Const.REDIRECT_STRING_TYPE,false) && flag) {
+                if (stringOption && flag) {
                     pass.put(Const.REDIRECT_STRING_TYPE, true);
                 }
             }
-            if(operandStack.get(0).contains(Taint.MODEL_AND_VIEW)){
-                if (Application.globalOptions.getOrDefault(
-                        Const.REDIRECT_MODEL_AND_VIEW_TYPE,false) && flag) {
+            if (operandStack.get(0).contains(Taint.MODEL_AND_VIEW)) {
+                if (mavOption && flag) {
                     pass.put(Const.REDIRECT_MODEL_AND_VIEW_TYPE, true);
                 }
             }
@@ -91,8 +99,7 @@ public class RedirectMethodAdapter extends CoreMethodAdapter<String> {
             }
         }
 
-        if (Application.globalOptions.getOrDefault(
-                Const.REDIRECT_SEND_RESPONSE_TYPE,false) && sendRedirectCondition) {
+        if (sendOption && sendRedirectCondition) {
             if (operandStack.get(0).contains(Taint.PARAM_TAINT) ||
                     operandStack.get(0).contains(Taint.TO_STRING)) {
                 pass.put(Const.REDIRECT_SEND_RESPONSE_TYPE, true);
@@ -120,8 +127,7 @@ public class RedirectMethodAdapter extends CoreMethodAdapter<String> {
             }
         }
 
-        if (Application.globalOptions.getOrDefault(
-                Const.REDIRECT_MODEL_AND_VIEW_TYPE,false) && modelAndViewCondition) {
+        if (mavOption && modelAndViewCondition) {
             if (operandStack.get(0).contains(Taint.PARAM_TAINT) ||
                     operandStack.get(0).contains(Taint.TO_STRING)) {
                 super.visitMethodInsn(opcode, owner, name, desc, itf);
