@@ -112,12 +112,7 @@ public static void testRCE() {
 
 ## 常见问题
 
-（1）为什么启动时报错
-
-尝试：Preferences -> Editor -> UI Designer -> Generate UI into: Java source code
-
-然后：mvm clean
-
+[常见问题](doc/QUESTIONS.md)
 
 ## 如何构建方法调用链
 

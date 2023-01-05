@@ -66,7 +66,7 @@ public class Test {
         CodeInspector inspector = new CodeInspectorImpl();
         List<ResultInfo> results = inspector.analyzeRCE(
                 "./bin/code-inspector-demo-0.1-beta.jar",
-                true, false, false);
+                false, false, false);
         for (ResultInfo r : results) {
             System.out.println(r.getType() + ":" + r.getVulName());
         }

@@ -19,7 +19,7 @@
         </dependency>
         <dependency>
             <groupId>n1ar4</groupId>
-            <artifactId>code-inspector-model</artifactId>
+            <artifactId>code-inspector-util</artifactId>
             <scope>compile</scope>
             <version>0.1-beta</version>
         </dependency>

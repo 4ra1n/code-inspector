@@ -12,7 +12,7 @@ public class IOUtil {
             while ((n = inputStream.read(buffer)) > 0) {
                 outputStream.write(buffer, 0, n);
             }
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
     }
 }

@@ -20,6 +20,7 @@
         <module>code-inspector-build</module>
         <module>code-inspector-render</module>
         <module>code-inspector-demo</module>
+        <module>code-inspector-util</module>
     </modules>
 
     <properties>

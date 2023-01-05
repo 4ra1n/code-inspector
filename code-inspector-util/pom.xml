@@ -9,21 +9,21 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>code-inspector-spring</artifactId>
-
-    <dependencies>
-        <dependency>
-            <groupId>n1ar4</groupId>
-            <artifactId>code-inspector-model</artifactId>
-            <version>0.1-beta</version>
-            <scope>compile</scope>
-        </dependency>
-    </dependencies>
+    <artifactId>code-inspector-util</artifactId>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>n1ar4</groupId>
+            <artifactId>code-inspector-model</artifactId>
+            <scope>compile</scope>
+            <version>0.1-beta</version>
+        </dependency>
+    </dependencies>
 
 </project>
