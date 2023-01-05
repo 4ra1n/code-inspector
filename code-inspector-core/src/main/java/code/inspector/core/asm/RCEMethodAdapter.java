@@ -11,14 +11,24 @@ import java.util.Map;
 
 public class RCEMethodAdapter extends ParamTaintMethodAdapter {
     private final Map<String, Boolean> pass;
-
     private static int arrayPos = -1;
+
+    private final boolean runtimeOption;
+    private final boolean processOption;
+    private final boolean jndiOption;
+    private final boolean groovyOption;
+    private final boolean spELOption;
 
     public RCEMethodAdapter(int methodArgIndex, Map<String, Boolean> pass, int api, MethodVisitor mv,
                             String owner, int access, String name, String desc) {
         super(methodArgIndex, api, mv, owner, access, name, desc);
         this.pass = pass;
         arrayPos = -1;
+        this.runtimeOption = Application.globalOptions.getOrDefault(Const.RCE_RUNTIME_TYPE, false);
+        this.processOption = Application.globalOptions.getOrDefault(Const.RCE_PROCESS_TYPE, false);
+        this.spELOption = Application.globalOptions.getOrDefault(Const.RCE_SP_EL_TYPE, false);
+        this.jndiOption = Application.globalOptions.getOrDefault(Const.RCE_JNDI_TYPE, false);
+        this.groovyOption = Application.globalOptions.getOrDefault(Const.RCE_GROOVY_TYPE, false);
     }
 
     @Override
@@ -52,7 +62,6 @@ public class RCEMethodAdapter extends ParamTaintMethodAdapter {
                 desc.equals("(Ljava/lang/String;)Ljava/lang/Object;");
         boolean jndiCondition = owner.equals("javax/naming/Context") && name.equals("lookup");
 
-        boolean spELOption = Application.globalOptions.getOrDefault(Const.RCE_SP_EL_TYPE, false);
         boolean spELStandard = spELOption && owner.equals(
                 "org/springframework/expression/spel/support/StandardEvaluationContext") &&
                 name.equals("<init>");
@@ -126,8 +135,7 @@ public class RCEMethodAdapter extends ParamTaintMethodAdapter {
             }
         }
 
-        if (Application.globalOptions.getOrDefault(
-                Const.RCE_PROCESS_TYPE, false) && processInitCondition) {
+        if (processOption && processInitCondition) {
             if (operandStack.get(0).contains(Taint.PARAM_TAINT)) {
                 super.visitMethodInsn(opcode, owner, name, desc, itf);
                 operandStack.set(0, Taint.PROCESS_INIT);
@@ -135,8 +143,7 @@ public class RCEMethodAdapter extends ParamTaintMethodAdapter {
             }
         }
 
-        if (Application.globalOptions.getOrDefault(
-                Const.RCE_RUNTIME_TYPE, false) && runtimeCondition) {
+        if (runtimeOption && runtimeCondition) {
             if (operandStack.get(0).contains(Taint.PARAM_TAINT) ||
                     operandStack.get(0).contains(Taint.TO_STRING)) {
                 pass.put(Const.RCE_RUNTIME_TYPE, true);
@@ -145,8 +152,7 @@ public class RCEMethodAdapter extends ParamTaintMethodAdapter {
             }
         }
 
-        if (Application.globalOptions.getOrDefault(
-                Const.RCE_JNDI_TYPE, false) && jndiCondition) {
+        if (jndiOption && jndiCondition) {
             if (operandStack.get(0).contains(Taint.PARAM_TAINT) ||
                     operandStack.get(0).contains(Taint.TO_STRING)) {
                 pass.put(Const.RCE_JNDI_TYPE, true);
@@ -155,8 +161,7 @@ public class RCEMethodAdapter extends ParamTaintMethodAdapter {
             }
         }
 
-        if (Application.globalOptions.getOrDefault(
-                Const.RCE_PROCESS_TYPE, false) && processStartCondition) {
+        if (processOption && processStartCondition) {
             if (operandStack.get(0).contains(Taint.PROCESS_INIT)) {
                 pass.put(Const.RCE_PROCESS_TYPE, true);
                 super.visitMethodInsn(opcode, owner, name, desc, itf);
@@ -164,8 +169,7 @@ public class RCEMethodAdapter extends ParamTaintMethodAdapter {
             }
         }
 
-        if (Application.globalOptions.getOrDefault(
-                Const.RCE_GROOVY_TYPE, false) && groovyCondition) {
+        if (groovyOption && groovyCondition) {
             if (operandStack.get(0).contains(Taint.PARAM_TAINT) ||
                     operandStack.get(0).contains(Taint.TO_STRING)) {
                 pass.put(Const.RCE_GROOVY_TYPE, true);
