@@ -11,10 +11,30 @@ import java.util.Map;
 public class SqlInjectMethodAdapter extends ParamTaintMethodAdapter {
     private final Map<String, Boolean> pass;
 
+    private final boolean jdbcTUOption;
+    private final boolean jdbcTEOption;
+    private final boolean jdbcTwoParamOption;
+    private final boolean stmtEQOption;
+    private final boolean stmtEUOption;
+    private final boolean stmtEOption;
+
+
     public SqlInjectMethodAdapter(int methodArgIndex, Map<String, Boolean> pass, int api, MethodVisitor mv,
                                   String owner, int access, String name, String desc) {
         super(methodArgIndex, api, mv, owner, access, name, desc);
         this.pass = pass;
+        this.jdbcTUOption = Application.globalOptions.getOrDefault(
+                Const.SQL_JDBC_TEMPLATE_UPDATE, false);
+        this.jdbcTEOption = Application.globalOptions.getOrDefault(
+                Const.SQL_JDBC_TEMPLATE_EXECUTE, false);
+        this.jdbcTwoParamOption = Application.globalOptions.getOrDefault(
+                Const.SQL_JDBC_TEMPLATE_QUERY_ANY, false);
+        this.stmtEQOption = Application.globalOptions.getOrDefault(
+                Const.SQL_EXECUTE_QUERY, false);
+        this.stmtEUOption = Application.globalOptions.getOrDefault(
+                Const.SQL_EXECUTE_UPDATE, false);
+        this.stmtEOption = Application.globalOptions.getOrDefault(
+                Const.SQL_EXECUTE, false);
     }
 
     @Override
@@ -27,32 +47,27 @@ public class SqlInjectMethodAdapter extends ParamTaintMethodAdapter {
                 name.equals("toString") &&
                 desc.equals("()Ljava/lang/String;");
 
-        boolean jdbcTUCondition = Application.globalOptions.getOrDefault(
-                Const.SQL_JDBC_TEMPLATE_UPDATE, false) &&
+        boolean jdbcTUCondition = jdbcTUOption &&
                 owner.equals("org/springframework/jdbc/core/JdbcTemplate") &&
                 name.equals("update");
 
-        boolean jdbcTECondition = Application.globalOptions.getOrDefault(
-                Const.SQL_JDBC_TEMPLATE_EXECUTE, false) &&
+        boolean jdbcTECondition = jdbcTEOption &&
                 owner.equals("org/springframework/jdbc/core/JdbcTemplate") &&
                 name.equals("execute");
 
-        boolean jdbcTwoParamCondition = Application.globalOptions.getOrDefault(
-                Const.SQL_JDBC_TEMPLATE_QUERY_ANY, false) &&
+        boolean jdbcTwoParamCondition = jdbcTwoParamOption &&
                 owner.equals("org/springframework/jdbc/core/JdbcTemplate") &&
-                (name.equals("query") || name.equals("queryForStream") || name.equals("queryForList") ||
-                        name.equals("queryForMap") || name.equals("queryForObject"));
+                (name.equals("query") || name.equals("queryForStream") ||
+                        name.equals("queryForList") || name.equals("queryForMap") ||
+                        name.equals("queryForObject"));
 
-        boolean stmtEQCondition = Application.globalOptions.getOrDefault(
-                Const.SQL_EXECUTE_QUERY, false) &&
+        boolean stmtEQCondition = stmtEQOption &&
                 owner.equals("java/sql/Statement") && name.equals("executeQuery");
 
-        boolean stmtEUCondition = Application.globalOptions.getOrDefault(
-                Const.SQL_EXECUTE_UPDATE, false) &&
+        boolean stmtEUCondition = stmtEUOption &&
                 owner.equals("java/sql/Statement") && name.equals("executeUpdate");
 
-        boolean stmtECondition = Application.globalOptions.getOrDefault(
-                Const.SQL_EXECUTE, false) &&
+        boolean stmtECondition = stmtEOption &&
                 owner.equals("java/sql/Statement") && name.equals("execute");
 
         if (buildSqlCondition) {
