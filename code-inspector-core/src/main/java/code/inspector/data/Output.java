@@ -9,6 +9,7 @@ import code.inspector.model.MethodReference;
 
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
@@ -44,7 +45,12 @@ public class Output {
                                              String packageName) {
         packageName = packageName.replace(".", "/");
         try {
-            Files.write(Paths.get("calls.txt"),
+            Path callPath = Paths.get("calls.txt");
+            try {
+                Files.delete(callPath);
+            } catch (Exception ignored) {
+            }
+            Files.write(callPath,
                     getCallGraph(graphCallMap, packageName).getBytes(StandardCharsets.UTF_8));
         } catch (Exception e) {
             e.printStackTrace();
@@ -60,7 +66,12 @@ public class Output {
             sb.append("\n");
         }
         try {
-            Files.write(Paths.get("sorted.txt"), sb.toString().getBytes(StandardCharsets.UTF_8));
+            Path sortedPath = Paths.get("sorted.txt");
+            try {
+                Files.delete(sortedPath);
+            } catch (Exception ignored) {
+            }
+            Files.write(sortedPath, sb.toString().getBytes(StandardCharsets.UTF_8));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -88,7 +99,12 @@ public class Output {
             sb.append("\n");
         }
         try {
-            Files.write(Paths.get("controllers.txt"), sb.toString().getBytes(StandardCharsets.UTF_8));
+            Path conPath = Paths.get("controllers.txt");
+            try {
+                Files.delete(conPath);
+            } catch (Exception ignored) {
+            }
+            Files.write(conPath, sb.toString().getBytes(StandardCharsets.UTF_8));
         } catch (Exception e) {
             e.printStackTrace();
         }
