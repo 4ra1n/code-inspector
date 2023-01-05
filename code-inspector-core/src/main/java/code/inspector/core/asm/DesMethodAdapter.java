@@ -10,40 +10,45 @@ import java.util.Map;
 
 public class DesMethodAdapter extends ParamTaintMethodAdapter {
     private final Map<String, Boolean> pass;
-
     private static boolean jacksonEnable = false;
+
+    private final boolean jdkOption;
+    private final boolean fjOption;
+    private final boolean yamlOption;
+    private final boolean jacksonOption;
+    private final boolean hessianOption;
+    private final boolean xmlOption;
 
     public DesMethodAdapter(int methodArgIndex, Map<String, Boolean> pass, int api, MethodVisitor mv,
                             String owner, int access, String name, String desc) {
         super(methodArgIndex, api, mv, owner, access, name, desc);
         this.pass = pass;
         jacksonEnable = false;
+        this.jdkOption = Application.globalOptions.getOrDefault(Const.DESERIALIZATION_JDK, false);
+        this.fjOption = Application.globalOptions.getOrDefault(Const.DESERIALIZATION_FASTJSON, false);
+        this.yamlOption = Application.globalOptions.getOrDefault(Const.DESERIALIZATION_SNAKEYAML, false);
+        this.jacksonOption = Application.globalOptions.getOrDefault(Const.DESERIALIZATION_JACKSON, false);
+        this.hessianOption = Application.globalOptions.getOrDefault(Const.DESERIALIZATION_HESSIAN, false);
+        this.xmlOption = Application.globalOptions.getOrDefault(Const.DESERIALIZATION_XML_DECODER, false);
     }
 
     @Override
     public void visitMethodInsn(int opcode, String owner, String name, String desc, boolean itf) {
         boolean baInputStreamInit = owner.equals("java/io/ByteArrayInputStream") && name.equals("<init>");
 
-        boolean jdkOption = Application.globalOptions.getOrDefault(Const.DESERIALIZATION_JDK, false);
         boolean jdkInitCondition = jdkOption && owner.equals("java/io/ObjectInputStream")
                 && name.equals("<init>");
         boolean jdkReadObjCondition = jdkOption && owner.equals("java/io/ObjectInputStream")
                 && (name.equals("readObject") || name.equals("readUnshared"));
 
-        boolean fjOption = Application.globalOptions.getOrDefault(
-                Const.DESERIALIZATION_FASTJSON, false);
         boolean fjParseCondition = fjOption && owner.equals("com/alibaba/fastjson/JSON") && name.equals("parse");
         boolean fjPACondition = fjOption && owner.equals("com/alibaba/fastjson/JSON") && name.equals("parseArray");
         boolean fjPOCondition = fjOption && owner.equals("com/alibaba/fastjson/JSON") && name.equals("parseObject");
 
-        boolean yamlOption = Application.globalOptions.getOrDefault(
-                Const.DESERIALIZATION_SNAKEYAML, false);
         boolean yamlInitCondition = yamlOption && owner.equals("org/yaml/snakeyaml/Yaml") &&
                 name.equals("<init>") && desc.equals("()V");
         boolean yamlLoadCondition = yamlOption && owner.equals("org/yaml/snakeyaml/Yaml") && name.equals("load");
 
-        boolean jacksonOption = Application.globalOptions.getOrDefault(
-                Const.DESERIALIZATION_JACKSON, false);
         boolean jacksonEnableCondition = jacksonOption &&
                 owner.equals("com/fasterxml/jackson/databind/ObjectMapper") &&
                 name.equals("enableDefaultTyping");
@@ -51,8 +56,6 @@ public class DesMethodAdapter extends ParamTaintMethodAdapter {
                 owner.equals("com/fasterxml/jackson/databind/ObjectMapper") &&
                 name.equals("readValue");
 
-        boolean hessianOption = Application.globalOptions.getOrDefault(
-                Const.DESERIALIZATION_HESSIAN, false);
         boolean hessianInitCondition = hessianOption &&
                 owner.equals("com/alibaba/com/caucho/hessian/io/Hessian2Input") &&
                 name.equals("<init>");
@@ -60,8 +63,6 @@ public class DesMethodAdapter extends ParamTaintMethodAdapter {
                 owner.equals("com/alibaba/com/caucho/hessian/io/Hessian2Input") &&
                 name.equals("readObject");
 
-        boolean xmlOption = Application.globalOptions.getOrDefault(
-                Const.DESERIALIZATION_XML_DECODER, false);
         boolean xmlDecodeInit = xmlOption &&
                 owner.equals("java/beans/XMLDecoder") && name.equals("<init>");
         boolean xmlDecodeRead = xmlOption &&
