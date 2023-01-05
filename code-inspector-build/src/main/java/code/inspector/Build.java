@@ -20,6 +20,8 @@ public class Build {
         Path renderPom = Paths.get("code-inspector-render/pom.xml");
         Path springPom = Paths.get("code-inspector-spring/pom.xml");
         Path starterPom = Paths.get("code-inspector-starter/pom.xml");
+        Path starterCode = Paths.get("code-inspector-starter/src/main/java/" +
+                "code/inspector/start/Application.java");
 
         replace(rootPom);
         replace(apiPom);
@@ -32,6 +34,7 @@ public class Build {
         replace(renderPom);
         replace(springPom);
         replace(starterPom);
+        replace(starterCode);
     }
 
     private static void replace(Path path) throws Exception {
