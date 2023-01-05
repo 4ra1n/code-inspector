@@ -42,7 +42,6 @@ public class Output {
 
     public static void writeTargetCallGraphs(Map<MethodReference.Handle, Set<CallGraph>> graphCallMap,
                                              String packageName) {
-        packageName = "code.inspector";
         packageName = packageName.replace(".", "/");
         try {
             Files.write(Paths.get("calls.txt"),
