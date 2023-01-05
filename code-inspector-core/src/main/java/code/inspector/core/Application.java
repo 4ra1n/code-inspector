@@ -197,7 +197,7 @@ public class Application {
 
     private static void parseSpring(Command command) {
         if (command.springBoot) {
-            SpringService.start(classFileList, command.packageName, controllers, classMap, methodMap);
+            SpringService.start(classFileList, controllers, classMap, methodMap);
             if (command.isDebug) {
                 Output.writeControllers(controllers);
             }
