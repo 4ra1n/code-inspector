@@ -3,7 +3,7 @@
 ![](https://img.shields.io/badge/build-passing-brightgreen)
 ![](https://img.shields.io/badge/ASM-9.4-blue)
 ![](https://img.shields.io/badge/Java-8-red)
-![](https://img.shields.io/badge/Line-5865-yellow)
+![](https://img.shields.io/badge/Line-5930-yellow)
 
 一个Java自动代码审计工具，尤其针对SpringBoot框架，也可自行改造以适配其他情况
 
@@ -17,7 +17,7 @@
 
 ## 成果
 
-[漏洞扫描成果](doc/ACHIEVEMENT.md)
+[漏洞扫描成果](doc/ACHIEVE.md)
 
 ## 使用`GUI`启动器
 
