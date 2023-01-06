@@ -5,7 +5,7 @@
     <parent>
         <artifactId>code-inspector</artifactId>
         <groupId>n1ar4</groupId>
-        <version>0.1-beta</version>
+        <version>0.2-beta</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -22,7 +22,7 @@
             <groupId>n1ar4</groupId>
             <artifactId>code-inspector-core</artifactId>
             <scope>compile</scope>
-            <version>0.1-beta</version>
+            <version>0.2-beta</version>
         </dependency>
     </dependencies>
 

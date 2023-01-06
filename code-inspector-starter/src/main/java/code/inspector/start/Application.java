@@ -11,7 +11,7 @@ public class Application {
                 "          \\|__|\\|__|\\|__|\\|__|\\|__|    \\|__|\\|__| \\|__|\n";
         System.out.println(logo);
         System.out.println("Project: code-inspector");
-        System.out.println("Version: 0.1-beta");
+        System.out.println("Version: 0.2-beta");
         System.out.println("Author : 4ra1n");
         System.out.println("Github : github.com/4ra1n/code-inspector");
         code.inspector.form.CodeInspector.start0();

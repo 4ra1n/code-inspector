@@ -7,7 +7,7 @@
     <groupId>n1ar4</groupId>
     <artifactId>code-inspector</artifactId>
     <packaging>pom</packaging>
-    <version>0.1-beta</version>
+    <version>0.2-beta</version>
 
     <modules>
         <module>code-inspector-model</module>

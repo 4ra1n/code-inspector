@@ -5,7 +5,7 @@
     <parent>
         <artifactId>code-inspector</artifactId>
         <groupId>n1ar4</groupId>
-        <version>0.1-beta</version>
+        <version>0.2-beta</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -15,30 +15,30 @@
             <groupId>n1ar4</groupId>
             <artifactId>code-inspector-const</artifactId>
             <scope>compile</scope>
-            <version>0.1-beta</version>
+            <version>0.2-beta</version>
         </dependency>
         <dependency>
             <groupId>n1ar4</groupId>
             <artifactId>code-inspector-util</artifactId>
             <scope>compile</scope>
-            <version>0.1-beta</version>
+            <version>0.2-beta</version>
         </dependency>
         <dependency>
             <groupId>n1ar4</groupId>
             <artifactId>code-inspector-render</artifactId>
-            <version>0.1-beta</version>
+            <version>0.2-beta</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>n1ar4</groupId>
             <artifactId>code-inspector-jvm</artifactId>
             <scope>compile</scope>
-            <version>0.1-beta</version>
+            <version>0.2-beta</version>
         </dependency>
         <dependency>
             <groupId>n1ar4</groupId>
             <artifactId>code-inspector-spring</artifactId>
-            <version>0.1-beta</version>
+            <version>0.2-beta</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>
