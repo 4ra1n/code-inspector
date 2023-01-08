@@ -110,6 +110,12 @@ public static void testRCE() {
 }
 ```
 
+## Graphviz
+
+指定`Controller`类名和`Mapping`的方法名，以及分析的参数索引，即可画图
+
+![](images/00013.png)
+
 ## 常见问题
 
 [常见问题](doc/QUESTIONS.md)

@@ -10,11 +10,13 @@ import com.formdev.flatlaf.FlatDarkLaf;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.plaf.FontUIResource;
 import javax.swing.text.StyleContext;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -55,6 +57,16 @@ public class CodeInspector {
     private JCheckBox analyzeAllLibsCheckBox;
     private JButton openResultButton;
     private JPanel outputPanel;
+    private JPanel graphPanel;
+    private JTextField ccnText;
+    private JTextField mmnText;
+    private JButton startAnalyzeButton;
+    private JButton showGraphButton;
+    private JLabel ccnLabel;
+    private JLabel mmnLabel;
+    private JPanel tempPanel;
+    private JTextField indexText;
+    private JLabel paramIndex;
     private static String outputFilePath;
     private static final Command cmd = new Command();
     private static final HashMap<String, Boolean> option = new HashMap<>();
@@ -72,6 +84,28 @@ public class CodeInspector {
         initDeserializationConfig();
         initAction();
         initCheckBox();
+        initGraphviz();
+    }
+
+    private void initGraphviz() {
+        startAnalyzeButton.addActionListener(e -> {
+            String ccn = ccnText.getText().replace(".", "/");
+            String mmn = mmnText.getText();
+            String index = indexText.getText();
+            new Thread(() -> Application.graphvizWork(ccn, mmn, Integer.parseInt(index))).start();
+            JOptionPane.showMessageDialog(codeInspectorPanel, "Please Wait");
+        });
+        showGraphButton.addActionListener(e -> {
+            try {
+                BufferedImage wPic = ImageIO.read(new File("graphviz-code-inspector/test.jpg"));
+                JFrame frame = new JFrame("Graphviz");
+                frame.setContentPane(new Graphviz(wPic).graphvizPanel);
+                frame.pack();
+                frame.setVisible(true);
+            } catch (Exception ex) {
+                Log.warn("no graphviz result");
+            }
+        });
     }
 
     private void initCheckBox() {
@@ -296,7 +330,7 @@ public class CodeInspector {
      */
     private void $$$setupUI$$$() {
         codeInspectorPanel = new JPanel();
-        codeInspectorPanel.setLayout(new GridLayoutManager(4, 2, new Insets(0, 0, 0, 0), -1, -1));
+        codeInspectorPanel.setLayout(new GridLayoutManager(5, 2, new Insets(0, 0, 0, 0), -1, -1));
         selectJarPanel = new JPanel();
         selectJarPanel.setLayout(new GridLayoutManager(2, 2, new Insets(0, 0, 0, 0), -1, -1));
         codeInspectorPanel.add(selectJarPanel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
@@ -312,7 +346,7 @@ public class CodeInspector {
         selectJarPanel.add(jarInfoLabel, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 1, false));
         logPanel = new JPanel();
         logPanel.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
-        codeInspectorPanel.add(logPanel, new GridConstraints(3, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        codeInspectorPanel.add(logPanel, new GridConstraints(4, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         logPanel.setBorder(BorderFactory.createTitledBorder(null, "Log", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
         logScroll = new JScrollPane();
         logPanel.add(logScroll, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, new Dimension(500, 200), null, null, 0, false));
@@ -398,6 +432,34 @@ public class CodeInspector {
         openResultButton = new JButton();
         openResultButton.setText("Open Result");
         outputPanel.add(openResultButton, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 1, false));
+        graphPanel = new JPanel();
+        graphPanel.setLayout(new GridLayoutManager(4, 3, new Insets(0, 0, 0, 0), -1, -1));
+        codeInspectorPanel.add(graphPanel, new GridConstraints(3, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        graphPanel.setBorder(BorderFactory.createTitledBorder(null, "Graphviz", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
+        ccnLabel = new JLabel();
+        ccnLabel.setText("Controller Class Name");
+        graphPanel.add(ccnLabel, new GridConstraints(0, 0, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 1, false));
+        ccnText = new JTextField();
+        graphPanel.add(ccnText, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        mmnLabel = new JLabel();
+        mmnLabel.setText("Mapping Method Name");
+        graphPanel.add(mmnLabel, new GridConstraints(1, 0, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 1, false));
+        mmnText = new JTextField();
+        graphPanel.add(mmnText, new GridConstraints(1, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        tempPanel = new JPanel();
+        tempPanel.setLayout(new GridLayoutManager(1, 2, new Insets(0, 0, 0, 0), -1, -1));
+        graphPanel.add(tempPanel, new GridConstraints(3, 0, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        startAnalyzeButton = new JButton();
+        startAnalyzeButton.setText("Start Analyze");
+        tempPanel.add(startAnalyzeButton, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        showGraphButton = new JButton();
+        showGraphButton.setText("Show Graph");
+        tempPanel.add(showGraphButton, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        paramIndex = new JLabel();
+        paramIndex.setText("Param Index (1)");
+        graphPanel.add(paramIndex, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 1, false));
+        indexText = new JTextField();
+        graphPanel.add(indexText, new GridConstraints(2, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
     }
 
     /**

@@ -5,10 +5,12 @@ import code.inspector.core.inherit.InheritanceUtil;
 import code.inspector.core.service.*;
 import code.inspector.core.service.system.*;
 import code.inspector.core.spring.SpringController;
+import code.inspector.core.spring.SpringMapping;
 import code.inspector.core.util.ClassUtil;
 import code.inspector.core.util.DirUtil;
 import code.inspector.data.Output;
 import code.inspector.data.ResultOutput;
+import code.inspector.graphviz.GraphvizCore;
 import code.inspector.log.Log;
 import code.inspector.model.*;
 
@@ -157,6 +159,65 @@ public class Application {
             classFileList.addAll(ClassUtil.getAllClassesFromBoots(command.jars, command.jdk, command.lib));
         } else {
             classFileList.addAll(ClassUtil.getAllClassesFromJars(command.jars, command.jdk));
+        }
+    }
+
+    public static void graphvizWork(String ccn, String mmn, int index) {
+        MethodReference.Handle mh = null;
+        for (SpringController c : controllers) {
+            if (c.getClassName().getName().equals(ccn)) {
+                for (SpringMapping mapping : c.getMappings()) {
+                    if (mapping.getMethodReference().getName().equals(mmn)) {
+                        mh = mapping.getMethodName();
+                    }
+                }
+            }
+        }
+        if (mh == null) {
+            Log.warn("graphviz no result");
+            return;
+        }
+        List<MethodReference> mrList = new ArrayList<>();
+        MethodReference mr = methodMap.get(mh);
+        if (mr != null) {
+            mrList.add(mr);
+        }
+        Set<CallGraph> calls = graphCallMap.get(mh);
+        for (CallGraph call : calls) {
+            if (call.getTargetArgIndex() == index) {
+                MethodReference m = methodMap.get(call.getTargetMethod());
+                if (mr != null) {
+                    mrList.add(m);
+                }
+                List<MethodReference.Handle> visited = new ArrayList<>();
+                doTask(call.getTargetMethod(), call.getTargetArgIndex(), visited, mrList);
+            }
+        }
+        GraphvizCore.work("graphviz-code-inspector", mrList, index);
+    }
+
+    private static void doTask(MethodReference.Handle targetMethod, int targetIndex,
+                               List<MethodReference.Handle> visited, List<MethodReference> mrList) {
+        if (visited.contains(targetMethod)) {
+            return;
+        } else {
+            visited.add(targetMethod);
+        }
+        Set<CallGraph> calls = graphCallMap.get(targetMethod);
+        if (calls == null || calls.size() == 0) {
+            return;
+        }
+        for (CallGraph callGraph : calls) {
+            if (callGraph.getCallerArgIndex() == targetIndex && targetIndex != -1) {
+                if (visited.contains(callGraph.getTargetMethod())) {
+                    return;
+                }
+                MethodReference mr = methodMap.get(callGraph.getTargetMethod());
+                if (mr != null) {
+                    mrList.add(mr);
+                }
+                doTask(callGraph.getTargetMethod(), callGraph.getTargetArgIndex(), visited, mrList);
+            }
         }
     }
 
