@@ -5,7 +5,7 @@
 ![](https://img.shields.io/badge/Java-8-red)
 ![](https://img.shields.io/badge/Line-6176-yellow)
 
-**注意：本项目是一个学习项目，可能不会长期维护，作者经历有限，欢迎大佬们二次开发**
+**注意：本项目是一个学习项目，可能不会长期维护，作者精力有限，欢迎大佬们二次开发**
 
 一个Java自动代码审计工具，尤其针对SpringBoot框架，也可自行改造以适配其他情况
 
