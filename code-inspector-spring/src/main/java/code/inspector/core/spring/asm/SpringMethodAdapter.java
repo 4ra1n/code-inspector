@@ -19,7 +19,7 @@ import java.util.Map;
 public class SpringMethodAdapter extends MethodVisitor {
     private final Map<MethodReference.Handle, MethodReference> methodMap;
     private final List<SpringParam> requestParam = new ArrayList<>();
-    private SpringMapping currentMapping;
+    private final SpringMapping currentMapping;
     private final SpringController controller;
     private final String name;
     private final String owner;
@@ -37,6 +37,7 @@ public class SpringMethodAdapter extends MethodVisitor {
         this.name = name;
         this.methodMap = methodMap;
         this.controller = currentController;
+        this.currentMapping = new SpringMapping();
     }
 
     @Override
@@ -45,7 +46,6 @@ public class SpringMethodAdapter extends MethodVisitor {
         if (descriptor.equals(SpringConstant.RequestMappingAnno) ||
                 descriptor.equals(SpringConstant.GetMappingAnno) ||
                 descriptor.equals(SpringConstant.PostMappingAnno)) {
-            currentMapping = new SpringMapping();
             currentMapping.setMethodName(new MethodReference.Handle(
                     new ClassReference.Handle(this.owner), this.name, this.desc));
             currentMapping.setController(controller);
